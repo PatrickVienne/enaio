@@ -16,6 +16,8 @@
   <div id="globeViz"></div>
 
   <script>
+    fetch("/api/total").then(r=>r.json()).then(r => console.log("Received /api/total : ", r));
+
     // const populationFile = "/static/ne_110m_admin_0_countries.geojson";
     const populationFile = "/static/countries.geojson";
 
