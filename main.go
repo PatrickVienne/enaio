@@ -115,13 +115,13 @@ type LineData struct {
 	NetStream           float64  `json:"netStream"`
 }
 
-func readFlow(yesterdayDate time.Time) []LineData {
+func readFlow(yesterdayDate time.Time) map[int64][]LineData {
 
 	yesterday := fmt.Sprintf("%02d.%02d.%04d", yesterdayDate.Day(), yesterdayDate.Month(), yesterdayDate.Year())
 
 	filename := yesterday + "_flow.json"
 
-	var flows []LineData
+	var flows map[int64][]LineData
 
 	content, _ := ioutil.ReadFile(filename)
 	json.Unmarshal(content, &flows)
@@ -142,7 +142,7 @@ func readNet(yesterdayDate time.Time) map[int64]map[string]float64 {
 	return netdata
 }
 
-func getAllCountryTransmissions(yesterdayDate time.Time, countryInfo map[string]CountryInfo) ([]LineData, map[int64]map[string]float64) {
+func getAllCountryTransmissions(yesterdayDate time.Time, countryInfo map[string]CountryInfo) (map[int64][]LineData, map[int64]map[string]float64) {
 	start := time.Now()
 	defer fmt.Println("getAllCountryTransmissions: ", time.Since(start), " sec")
 
@@ -224,6 +224,11 @@ func getAllCountryTransmissions(yesterdayDate time.Time, countryInfo map[string]
 				lineDataEntry.StartLong = countryInfo[startCca2].LatLng[1]
 			} else {
 				fmt.Println("Problem with", startCca2, countryInfo[startCca2])
+				if startCca2 == "UK" {
+					startCca2 = "GB"
+					lineDataEntry.StartLat = countryInfo[startCca2].LatLng[0]
+					lineDataEntry.StartLong = countryInfo[startCca2].LatLng[1]
+				}
 			}
 
 			if len(countryInfo[endCca2].LatLng) == 2 {
@@ -231,6 +236,11 @@ func getAllCountryTransmissions(yesterdayDate time.Time, countryInfo map[string]
 				lineDataEntry.EndLong = countryInfo[endCca2].LatLng[1]
 			} else {
 				fmt.Println("Problem with", endCca2, countryInfo[endCca2])
+				if endCca2 == "UK" {
+					endCca2 = "GB"
+					lineDataEntry.EndLat = countryInfo[endCca2].LatLng[0]
+					lineDataEntry.EndLong = countryInfo[endCca2].LatLng[1]
+				}
 			}
 			lineDataEntry.StartCCA3 = countryInfo[startCca2].Cca3
 			lineDataEntry.EndCCA3 = countryInfo[endCca2].Cca3
@@ -310,7 +320,7 @@ func getAllCountryTransmissions(yesterdayDate time.Time, countryInfo map[string]
 		}
 	}
 
-	return container, netByTimeAndCountry
+	return schulesByTime, netByTimeAndCountry
 }
 
 type CountryCharge struct {
@@ -354,7 +364,7 @@ func dateTimeToTimestamp(_date time.Time, _time string) (int64, int64) {
 }
 
 type JsonResult struct {
-	Flows       []LineData
+	Flows       map[int64][]LineData
 	Net         map[int64]map[string]float64
 	CountryInfo map[string]CountryInfo
 }
@@ -376,7 +386,7 @@ func main() {
 	// fmt.Println("dayUnix", dayUnix)
 	// fmt.Println(dateTimeToTimestamp(yesterdayDate, time))
 
-	var results []LineData
+	var results map[int64][]LineData
 	var netByTimeAndCountry map[int64]map[string]float64
 
 	flowfilename := yesterday + "_flow.json"

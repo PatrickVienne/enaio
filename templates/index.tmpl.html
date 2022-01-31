@@ -6,17 +6,18 @@
   </style>
 
   <script src="//unpkg.com/three"></script>
-  <script src="//unpkg.com/globe.gl"></script>
+  <!-- <script src="//unpkg.com/globe.gl"></script> -->
   <script src="https://unpkg.com/papaparse@5.3.1/papaparse.min.js"></script>
   <script src="//unpkg.com/three/examples/js/controls/TrackballControls.js"></script>
   <script src="//unpkg.com/three-globe"></script>
+  <script src="//unpkg.com/solar-calculator"></script>
 </head>
 
 <body>
+  <div id="time" style="width: 100%; background-color: black; color: burlywood;"></div>
   <div id="globeViz"></div>
 
   <script>
-    fetch("/api/total").then(r=>r.json()).then(r => console.log("Received /api/total : ", r));
 
     // const populationFile = "/static/ne_110m_admin_0_countries.geojson";
     const populationFile = "/static/countries.geojson";
@@ -116,7 +117,7 @@
           endLat: endLat,
           endLng: endLng,
           color: [`rgba(0, 255, 0, 0.9)`, `rgba(255, 0, 0, 0.9)`],
-          stroke: value.value / 4000
+          stroke: value.value / 6000
         }
         return result
       })
@@ -139,12 +140,47 @@
           color: [`rgba(0, 255, 0, 0.9)`, `rgba(255, 0, 0, 0.9)`],
           stroke: value.value / 1000
         }
-        console.log("getCountryNet", value.from_country_cca3, value.to_country_cca3, value, val, color);
+        // console.log("getCountryNet", value.from_country_cca3, value.to_country_cca3, value, val, color);
         return result
       })
     }
 
-    const k = 200.;
+    function loadFlowsToArcData(flows) {
+      console.log("Start Proc", flows)
+      let arcs = flows.map((value) => {
+        // { "border": "CTY|10YHR-HEP------M!CTY_CTY|10YHR-HEP------M_CTY_CTY|10YBA-JPCC-----D",
+        //  "date": "30.01.2022", "starttimestr": "00:00", "endtimestr": "01:00", 
+        //  "starttime": 1643497200, "endtime": 1643500800, "startLat": 44, "startLong": 18, "endLat": 45.166668,
+        //   "endLong": 15.5, "startCCA3": "BIH", "endCCA3": "HRV", "timeframe": "00:00-01:00", 
+        //   "upstreamDirection": ["BA", "HR"], "downstreamDirection": ["HR", "BA"], "upstream": 0, "downstream": 305, "netStream": -305 }
+        if (+value["netStream"] > 0) {
+          result = {
+            startLat: value["startLat"],
+            startLng: value["startLong"],
+            endLat: value["endLat"],
+            endLng: value["endLong"],
+            color: [`rgba(0, 255, 0, 0.9)`, `rgba(255, 0, 0, 0.9)`],
+            stroke: +value["netStream"] / 4000
+          }
+        } else {
+          result = {
+            startLat: value["endLat"],
+            startLng: value["endLong"],
+            endLat: value["startLat"],
+            endLng: value["startLong"],
+            color: [`rgba(0, 255, 0, 0.9)`, `rgba(255, 0, 0, 0.9)`],
+            stroke: -(+value["netStream"]) / 4000
+          }
+        }
+
+        console.log("loadFlowsToArcData", value["startCCA3"], value["endCCA3"], value);
+        return result
+      })
+      console.log("ARCS", arcs);
+      return arcs
+    }
+
+    const k = 5.;
     function sigmoid(z) {
       return 1. / (1. + Math.exp(-z / k));
     }
@@ -193,16 +229,57 @@
       }
       let val = sigmoid(value / 1000.)
       let color = 'rgba(' + Math.round(255 * (1 - val)) + ',' + Math.round(255 * val) + ', 0, 0.7)';
-      console.log("valueByCountry", countrycode, value, val, color);
+      // console.log("valueByCountry", countrycode, value, val, color);
       return color;
     }
+    // add sun layer on top
+    const VELOCITY = 9; // minutes per frame
+
+    const sunPosAt = dt => {
+      const day = new Date(+dt).setUTCHours(0, 0, 0, 0);
+      const t = solar.century(dt);
+      const longitude = (day - dt) / 864e5 * 360 - 180;
+      return [longitude - solar.equationOfTime(t) / 4, solar.declination(t)];
+    };
+
+
+    let dt = (+(new Date()) - 24 * 3600 * 1000);
+    const solarTile = { pos: sunPosAt(dt) };
+    const timeEl = document.getElementById('time');
+
+
 
     Promise.all([
       fetch(submarineCableFile).then(r => r.json()).then(cablesGeo => parseSubmarineCable(cablesGeo)),
       fetch(countriesFile).then(r => r.json()).then(countries => parseCountriesFile(countries)),
       fetch(csvTransferFile).then(r => r.text()).then(countriesTransfer => Papa.parse(countriesTransfer).data),
-      fetch(populationFile).then(r => r.json()).then(population => population)
-    ]).then(([cablesGeo, countriesInfo, countriesTransfer, countries]) => {
+      fetch(populationFile).then(r => r.json()).then(population => population),
+      fetch("/api/total").then(r => r.json()).then(r => r.data)
+    ]).then(([cablesGeo, countriesInfo, countriesTransfer, countries, { Flows, Net, CountryInfo }]) => {
+      const minTime = Math.min(...Object.keys(Net)) * 1000
+      const maxTime = Math.max(...Object.keys(Net)) * 1000
+
+      let lastFlow = null;
+      const FlowAt = (dt) => {
+        let unixSeconds = Math.round(dt / 1000 / 3600) * 3600
+        if (unixSeconds !== lastFlow && unixSeconds in Flows) {
+          globe.arcsData(loadFlowsToArcData(Flows[unixSeconds]));
+          // console.log("Flows", new Date(unixSeconds * 1000), Flows[unixSeconds]);
+          lastFlow = unixSeconds;
+        }
+      }
+
+      let lastNet = null;
+      const NetAt = (dt) => {
+        let unixSeconds = "" + Math.round(dt / 1000 / 3600) * 3600
+        if (lastNet != unixSeconds && unixSeconds in Net) {
+          // console.log("NET", new Date(unixSeconds * 1000), Net[unixSeconds]);
+          globe.polygonCapColor((v) => loadCountryColor(new Map(Object.entries(Net[unixSeconds])), v))
+          lastNet = unixSeconds;
+        }
+      }
+
+      console.log("Flows, Net, CountryInfo", Flows, Net, CountryInfo);
       console.log("countriesInfo", countriesInfo);
       console.log("countries", countries);
       console.log("countriesTransfer", countriesTransfer);
@@ -211,22 +288,21 @@
       let valueByCountry = results[1];
       console.log("Parsed countriesTransfer", parsed);
       console.log("valueByCountry countriesTransfer", valueByCountry);
-      let arcData = countryTransferToArcData(parsed);
-      console.log("Parsed arcData", arcData);
+      let arcsData = countryTransferToArcData(parsed);
+      console.log("Parsed arcData", arcsData);
 
-      const N = 20;
-
-      const arcsData = arcData;
-      // Fake load net balance energy transportation between balancing areas
-      // const arcsData = [...Array(N).keys()].map(() => ({
-      //   startLat: (Math.random() - 0.5) * 180,
-      //   startLng: (Math.random() - 0.5) * 360,
-      //   endLat: (Math.random() - 0.5) * 180,
-      //   endLng: (Math.random() - 0.5) * 360,
-      //   color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
-      // }));
 
       const globe = new ThreeGlobe()
+        .tilesData([solarTile])
+        .tileLng(d => d.pos[0])
+        .tileLat(d => d.pos[1])
+        .tileAltitude(0.005)
+        .tileWidth(180)
+        .tileHeight(180)
+        .tileUseGlobeProjection(false)
+        .tileMaterial(() => new THREE.MeshLambertMaterial({ color: '#ffff00', opacity: 0.3, transparent: true }))
+        .tilesTransitionDuration(0)
+
         .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
         .polygonsData(countries.features.filter(d => d.properties.code !== 'AQ'))
         .polygonSideColor(() => 'rgba(0, 0, 0, 1)')
@@ -241,6 +317,8 @@
         //   .polygonCapColor(d => d === hoverD ? 'steelblue' : colorScale(getVal(d)))
         // )
         // .polygonsTransitionDuration(300)
+
+
 
 
         // add lines transporting energy between countries
@@ -264,8 +342,31 @@
         .pathDashLength(0.1)
         .pathDashGap(0.008)
         .pathDashAnimateTime(12000);
+
+
+      // animate time of day
+      let passedSeconds = 0;
+      requestAnimationFrame(() =>
+        (function animate() {
+          // dt += VELOCITY * 60 * 1000;
+          dt += VELOCITY * 60 * 100;
+          if (dt > maxTime) {
+            dt = minTime
+          } else if (dt < minTime) {
+            dt = minTime
+          }
+          solarTile.pos = sunPosAt(dt);
+          FlowAt(dt)
+          NetAt(dt)
+          globe.tilesData([solarTile]);
+          timeEl.textContent = new Date(dt).toLocaleString();
+          requestAnimationFrame(animate);
+        })()
+      );
+
+
       // setTimeout(() => globe.polygonAltitude((v) => loadCountryValue(valueByCountry, v)), 1000);
-      setTimeout(() => globe.polygonCapColor((v) => loadCountryColor(valueByCountry, v)), 1000);
+      // setTimeout(() => globe.polygonCapColor((v) => loadCountryColor(valueByCountry, v)), 1000);
 
 
       // Setup renderer
