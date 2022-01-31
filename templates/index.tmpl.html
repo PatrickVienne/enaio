@@ -1,0 +1,303 @@
+<head>
+  <style>
+    body {
+      margin: 0;
+    }
+  </style>
+
+  <script src="//unpkg.com/three"></script>
+  <script src="//unpkg.com/globe.gl"></script>
+  <script src="https://unpkg.com/papaparse@5.3.1/papaparse.min.js"></script>
+  <script src="//unpkg.com/three/examples/js/controls/TrackballControls.js"></script>
+  <script src="//unpkg.com/three-globe"></script>
+</head>
+
+<body>
+  <div id="globeViz"></div>
+
+  <script>
+    // const populationFile = "/static/ne_110m_admin_0_countries.geojson";
+    const populationFile = "/static/countries.geojson";
+
+    const countriesFile = "/static/countries.json";
+    const csvTransferFile = "/static/country_transfer.csv";
+    const submarineCableFile = "//raw.githubusercontent.com/telegeography/www.submarinecablemap.com/master/web/public/api/v3/cable/cable-geo.json";
+
+    function parseSubmarineCable(cablesGeo) {
+      let cablePaths = [];
+      cablesGeo.features.forEach(({ geometry, properties }) => {
+        geometry.coordinates.forEach(coords => cablePaths.push({ coords, properties }));
+      });
+      return cablePaths;
+    }
+
+    function parseCountriesFile(values) {
+      const countriesByCCA2 = new Map();
+      const countriesByCCA3 = new Map();
+      const latlngByCCA3 = new Map();
+      const nameByCCA3 = new Map();
+
+      values.forEach(country => {
+        let name = country["name"]["common"];
+        let cca2 = country["cca2"];
+        let cca3 = country["cca3"];
+        let latlng = country["latlng"];
+
+        countriesByCCA2.set(cca2, country);
+        countriesByCCA3.set(cca3, country);
+        latlngByCCA3.set(cca3, latlng);
+        nameByCCA3.set(cca3, name);
+      });
+      return { countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 };
+    }
+
+    function ParseTransferCSV(valuesLines) {
+      let header = valuesLines[0]
+      console.log(header)
+      console.log(valuesLines.length)
+
+      const countriesByCCA2 = new Map();
+      const countriesByCCA3 = new Map();
+      const latlngByCCA3 = new Map();
+      const nameByCCA3 = new Map();
+
+      const net_by_cca3 = new Map();
+      // 0,00:00,01:00,Greece (GR),Albania (AL),Greece ,GR,Albania ,AL,184.0,0,1,"rgba(127, 127, 127, 0.8)",,"[39, 22]","[41, 20]",GRC,ALB
+      let results = [];
+      for (let i = 1; i < valuesLines.length; i++) {
+        let start = valuesLines[i][1]
+        let end = valuesLines[i][2]
+        let value = (+valuesLines[i][9]) || 0;
+        if (value === "NaN" || value === undefined || value === null) {
+          value = 0;
+        }
+        let from_country_latlng = valuesLines[i][14]
+        let to_country_latlng = valuesLines[i][15]
+        let from_country_cca3 = valuesLines[i][16]
+        let to_country_cca3 = valuesLines[i][17]
+        if (net_by_cca3.has(from_country_cca3)) {
+          let cca3_value = +net_by_cca3.get(from_country_cca3) || 0;
+          if (cca3_value === "NaN" || cca3_value === undefined || cca3_value === null) {
+            cca3_value = 0;
+          }
+          net_by_cca3.set(from_country_cca3, cca3_value + +value)
+        } else {
+          net_by_cca3.set(from_country_cca3, +value)
+        }
+        if (net_by_cca3.has(to_country_cca3)) {
+          let cca3_value = +net_by_cca3.get(to_country_cca3) || 0;
+          if (cca3_value === "NaN" || cca3_value === undefined || cca3_value === null) {
+            cca3_value = 0;
+          }
+          net_by_cca3.set(to_country_cca3, cca3_value - (+value))
+        } else {
+          net_by_cca3.set(to_country_cca3, - (+value))
+        }
+        if (valuesLines[i][1] === "00:00" && end === "01:00") {
+          results.push({ start, end, value, from_country_latlng, to_country_latlng, from_country_cca3, to_country_cca3 })
+        }
+      }
+      return [results, net_by_cca3];
+    }
+
+    function countryTransferToArcData(countriesTransfer) {
+      return countriesTransfer.map((value) => {
+        v = JSON.parse(value.from_country_latlng)
+        w = JSON.parse(value.to_country_latlng)
+        let startlat = v[0]
+        let startlng = v[1]
+        let endLat = w[0]
+        let endLng = w[1]
+        result = {
+          startLat: startlat,
+          startLng: startlng,
+          endLat: endLat,
+          endLng: endLng,
+          color: [`rgba(0, 255, 0, 0.9)`, `rgba(255, 0, 0, 0.9)`],
+          stroke: value.value / 4000
+        }
+        return result
+      })
+
+    }
+
+    function getCountryNet(countriesTransfer) {
+      return countriesTransfer.map((value) => {
+        v = JSON.parse(value.from_country_latlng)
+        w = JSON.parse(value.to_country_latlng)
+        let startlat = v[0]
+        let startlng = v[1]
+        let endLat = w[0]
+        let endLng = w[1]
+        result = {
+          startLat: startlat,
+          startLng: startlng,
+          endLat: endLat,
+          endLng: endLng,
+          color: [`rgba(0, 255, 0, 0.9)`, `rgba(255, 0, 0, 0.9)`],
+          stroke: value.value / 1000
+        }
+        console.log("getCountryNet", value.from_country_cca3, value.to_country_cca3, value, val, color);
+        return result
+      })
+    }
+
+    const k = 200.;
+    function sigmoid(z) {
+      return 1. / (1. + Math.exp(-z / k));
+    }
+
+    function loadCountryValue(valueByCountry, v) {
+      let countrycode = v.properties.ISO_A3;
+      if (countrycode === "-99") {
+        console.log("Countrycode RE", countrycode, v)
+        countrycode = v.properties.WB_A3;
+      }
+      if (countrycode === "-99") {
+        console.log("Countrycode RERE", countrycode, v)
+        countrycode = v.properties.SU_A3;
+      }
+      if (countrycode === "-99") {
+        console.log("Could not identify countrycode", v)
+      }
+      if (valueByCountry.has(countrycode)) {
+        value = valueByCountry.get(countrycode)
+      } else {
+        // console.log("valueByCountry NOT FOUND", v.properties.ISO_A3, v, 0);
+        return 0
+      }
+      let val = sigmoid(value / 1000.) / 50 + 0.001
+      return val;
+    }
+
+    function loadCountryColor(valueByCountry, v) {
+      let countrycode = v.properties.ISO_A3;
+      if (countrycode === "-99") {
+        console.log("Countrycode RE", countrycode, v)
+        countrycode = v.properties.WB_A3;
+      }
+      if (countrycode === "-99") {
+        console.log("Countrycode RERE", countrycode, v)
+        countrycode = v.properties.SU_A3;
+      }
+      if (countrycode === "-99") {
+        console.log("Could not identify countrycode", v)
+      }
+      if (valueByCountry.has(countrycode)) {
+        value = valueByCountry.get(countrycode)
+      } else {
+        // console.log("valueByCountry NOT FOUND", v.properties.ISO_A3, v, 0);
+        return 'rgba(0, 0, 0, 1)'
+      }
+      let val = sigmoid(value / 1000.)
+      let color = 'rgba(' + Math.round(255 * (1 - val)) + ',' + Math.round(255 * val) + ', 0, 0.7)';
+      console.log("valueByCountry", countrycode, value, val, color);
+      return color;
+    }
+
+    Promise.all([
+      fetch(submarineCableFile).then(r => r.json()).then(cablesGeo => parseSubmarineCable(cablesGeo)),
+      fetch(countriesFile).then(r => r.json()).then(countries => parseCountriesFile(countries)),
+      fetch(csvTransferFile).then(r => r.text()).then(countriesTransfer => Papa.parse(countriesTransfer).data),
+      fetch(populationFile).then(r => r.json()).then(population => population)
+    ]).then(([cablesGeo, countriesInfo, countriesTransfer, countries]) => {
+      console.log("countriesInfo", countriesInfo);
+      console.log("countries", countries);
+      console.log("countriesTransfer", countriesTransfer);
+      let results = ParseTransferCSV(countriesTransfer);
+      let parsed = results[0];
+      let valueByCountry = results[1];
+      console.log("Parsed countriesTransfer", parsed);
+      console.log("valueByCountry countriesTransfer", valueByCountry);
+      let arcData = countryTransferToArcData(parsed);
+      console.log("Parsed arcData", arcData);
+
+      const N = 20;
+
+      const arcsData = arcData;
+      // Fake load net balance energy transportation between balancing areas
+      // const arcsData = [...Array(N).keys()].map(() => ({
+      //   startLat: (Math.random() - 0.5) * 180,
+      //   startLng: (Math.random() - 0.5) * 360,
+      //   endLat: (Math.random() - 0.5) * 180,
+      //   endLng: (Math.random() - 0.5) * 360,
+      //   color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
+      // }));
+
+      const globe = new ThreeGlobe()
+        .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
+        .polygonsData(countries.features.filter(d => d.properties.code !== 'AQ'))
+        .polygonSideColor(() => 'rgba(0, 0, 0, 1)')
+        .polygonStrokeColor(() => '#111')
+        // .polygonLabel(({ properties: d }) => `
+        //   <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
+        //   GDP: <i>${d.GDP_MD_EST}</i> M$<br/>
+        //   Population: <i>${d.POP_EST}</i>
+        // `)
+        // .onPolygonHover(hoverD => Globe
+        //   .polygonAltitude(d => d === hoverD ? 0.12 : 0.06)
+        //   .polygonCapColor(d => d === hoverD ? 'steelblue' : colorScale(getVal(d)))
+        // )
+        // .polygonsTransitionDuration(300)
+
+
+        // add lines transporting energy between countries
+        .arcsData(arcsData)
+        .arcColor('color')
+        .arcStroke('stroke')
+        .arcDashLength(0.4)
+        .arcAltitude(0.05)
+        .arcDashGap(0.08)
+        .arcDashInitialGap(() => Math.random())
+        .arcDashAnimateTime(700)
+        .arcsTransitionDuration(0);
+
+      globe
+        .pathsData(cablesGeo)
+        .pathPoints('coords')
+        .pathPointLat(p => p[1])
+        .pathPointLng(p => p[0])
+        .pathColor(path => path.properties.color)
+        // .pathLabel(path => path.properties.name)
+        .pathDashLength(0.1)
+        .pathDashGap(0.008)
+        .pathDashAnimateTime(12000);
+      // setTimeout(() => globe.polygonAltitude((v) => loadCountryValue(valueByCountry, v)), 1000);
+      setTimeout(() => globe.polygonCapColor((v) => loadCountryColor(valueByCountry, v)), 1000);
+
+
+      // Setup renderer
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.getElementById('globeViz').appendChild(renderer.domElement);
+
+      // Setup scene
+      const scene = new THREE.Scene();
+      scene.add(globe);
+      scene.add(new THREE.AmbientLight(0xbbbbbb));
+      scene.add(new THREE.DirectionalLight(0xffffff, 0.6));
+
+      // Setup camera
+      const camera = new THREE.PerspectiveCamera();
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      camera.position.x = 20;
+      camera.position.y = 150;
+      camera.position.z = 100;
+
+      // Add camera controls
+      const tbControls = new THREE.TrackballControls(camera, renderer.domElement);
+      tbControls.minDistance = 101;
+      tbControls.rotateSpeed = 5;
+      tbControls.zoomSpeed = 0.8;
+
+      // Kick-off renderer
+      (function animate() { // IIFE
+        // Frame cycle
+        tbControls.update();
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      })();
+    });
+  </script>
+</body>

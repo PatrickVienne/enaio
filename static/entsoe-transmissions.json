@@ -1,0 +1,738 @@
+{
+    "CTY|10YAL-KESH-----5!CTY_CTY|10YAL-KESH-----5_CTY_CTY|10YGR-HTSO-----Y": [
+        "AL",
+        "GR"
+    ],
+    "CTY|10YAL-KESH-----5!CTY_CTY|10YAL-KESH-----5_CTY_CTY|10Y1001C--00100H": [
+        "AL",
+        "XK"
+    ],
+    "CTY|10YAL-KESH-----5!CTY_CTY|10YAL-KESH-----5_CTY_CTY|10YCS-CG-TSO---S": [
+        "AL",
+        "ME"
+    ],
+    "CTY|10YAL-KESH-----5!CTY_CTY|10YAL-KESH-----5_CTY_CTY|10YCS-SERBIATSOV": [
+        "AL",
+        "RS"
+    ],
+    "CTY|10Y1001A1001B004!CTY_CTY|10Y1001A1001B004_CTY_CTY|10Y1001A1001B012": [
+        "AM",
+        "GE"
+    ],
+    "CTY|10YAT-APG------L!CTY_CTY|10YAT-APG------L_CTY_CTY|10YCZ-CEPS-----N": [
+        "AT",
+        "CZ"
+    ],
+    "CTY|10YAT-APG------L!CTY_CTY|10YAT-APG------L_CTY_CTY|10Y1001A1001A83F": [
+        "AT",
+        "DE"
+    ],
+    "CTY|10YAT-APG------L!CTY_CTY|10YAT-APG------L_CTY_CTY|10YHU-MAVIR----U": [
+        "AT",
+        "HU"
+    ],
+    "CTY|10YAT-APG------L!CTY_CTY|10YAT-APG------L_CTY_CTY|10YIT-GRTN-----B": [
+        "AT",
+        "IT"
+    ],
+    "CTY|10YAT-APG------L!CTY_CTY|10YAT-APG------L_CTY_CTY|10YSI-ELES-----O": [
+        "AT",
+        "SI"
+    ],
+    "CTY|10YAT-APG------L!CTY_CTY|10YAT-APG------L_CTY_CTY|10YCH-SWISSGRIDZ": [
+        "AT",
+        "CH"
+    ],
+    "CTY|10Y1001A1001B05V!CTY_CTY|10Y1001A1001B05V_CTY_CTY|10Y1001A1001B012": [
+        "AZ",
+        "GE"
+    ],
+    "CTY|BY!CTY_CTY|BY_CTY_CTY|10YLT-1001A0008Q": [
+        "BY",
+        "LT"
+    ],
+    "CTY|BY!CTY_CTY|BY_CTY_CTY|10Y1001C--00003F": [
+        "BY",
+        "UA"
+    ],
+    "CTY|10YBE----------2!CTY_CTY|10YBE----------2_CTY_CTY|10YFR-RTE------C": [
+        "BE",
+        "FR"
+    ],
+    "CTY|10YBE----------2!CTY_CTY|10YBE----------2_CTY_CTY|10Y1001A1001A83F": [
+        "BE",
+        "DE"
+    ],
+    "CTY|10YBE----------2!CTY_CTY|10YBE----------2_CTY_CTY|10YLU-CEGEDEL-NQ": [
+        "BE",
+        "LU"
+    ],
+    "CTY|10YBE----------2!CTY_CTY|10YBE----------2_CTY_CTY|10YNL----------L": [
+        "BE",
+        "NL"
+    ],
+    "CTY|10YBE----------2!CTY_CTY|10YBE----------2_CTY_CTY|10Y1001A1001A92E": [
+        "BE",
+        "GB"
+    ],
+    "CTY|10YBA-JPCC-----D!CTY_CTY|10YBA-JPCC-----D_CTY_CTY|10YHR-HEP------M": [
+        "BA",
+        "HR"
+    ],
+    "CTY|10YBA-JPCC-----D!CTY_CTY|10YBA-JPCC-----D_CTY_CTY|10YCS-CG-TSO---S": [
+        "BA",
+        "ME"
+    ],
+    "CTY|10YBA-JPCC-----D!CTY_CTY|10YBA-JPCC-----D_CTY_CTY|10YCS-SERBIATSOV": [
+        "BA",
+        "RS"
+    ],
+    "CTY|10YCA-BULGARIA-R!CTY_CTY|10YCA-BULGARIA-R_CTY_CTY|10YGR-HTSO-----Y": [
+        "BG",
+        "GR"
+    ],
+    "CTY|10YCA-BULGARIA-R!CTY_CTY|10YCA-BULGARIA-R_CTY_CTY|10YMK-MEPSO----8": [
+        "BG",
+        "MK"
+    ],
+    "CTY|10YCA-BULGARIA-R!CTY_CTY|10YCA-BULGARIA-R_CTY_CTY|10YRO-TEL------P": [
+        "BG",
+        "RO"
+    ],
+    "CTY|10YCA-BULGARIA-R!CTY_CTY|10YCA-BULGARIA-R_CTY_CTY|10YCS-SERBIATSOV": [
+        "BG",
+        "RS"
+    ],
+    "CTY|10YCA-BULGARIA-R!CTY_CTY|10YCA-BULGARIA-R_CTY_CTY|10YTR-TEIAS----W": [
+        "BG",
+        "TR"
+    ],
+    "CTY|10YHR-HEP------M!CTY_CTY|10YHR-HEP------M_CTY_CTY|10YBA-JPCC-----D": [
+        "HR",
+        "BA"
+    ],
+    "CTY|10YHR-HEP------M!CTY_CTY|10YHR-HEP------M_CTY_CTY|10YHU-MAVIR----U": [
+        "HR",
+        "HU"
+    ],
+    "CTY|10YHR-HEP------M!CTY_CTY|10YHR-HEP------M_CTY_CTY|10YCS-SERBIATSOV": [
+        "HR",
+        "RS"
+    ],
+    "CTY|10YHR-HEP------M!CTY_CTY|10YHR-HEP------M_CTY_CTY|10YSI-ELES-----O": [
+        "HR",
+        "SI"
+    ],
+    "CTY|10YCZ-CEPS-----N!CTY_CTY|10YCZ-CEPS-----N_CTY_CTY|10YAT-APG------L": [
+        "CZ",
+        "AT"
+    ],
+    "CTY|10YCZ-CEPS-----N!CTY_CTY|10YCZ-CEPS-----N_CTY_CTY|10Y1001A1001A83F": [
+        "CZ",
+        "DE"
+    ],
+    "CTY|10YCZ-CEPS-----N!CTY_CTY|10YCZ-CEPS-----N_CTY_CTY|10YPL-AREA-----S": [
+        "CZ",
+        "PL"
+    ],
+    "CTY|10YCZ-CEPS-----N!CTY_CTY|10YCZ-CEPS-----N_CTY_CTY|10YSK-SEPS-----K": [
+        "CZ",
+        "SK"
+    ],
+    "CTY|10Y1001A1001A65H!CTY_CTY|10Y1001A1001A65H_CTY_CTY|10Y1001A1001A83F": [
+        "DK",
+        "DE"
+    ],
+    "CTY|10Y1001A1001A65H!CTY_CTY|10Y1001A1001A65H_CTY_CTY|10YNL----------L": [
+        "DK",
+        "NL"
+    ],
+    "CTY|10Y1001A1001A65H!CTY_CTY|10Y1001A1001A65H_CTY_CTY|10YNO-0--------C": [
+        "DK",
+        "NO"
+    ],
+    "CTY|10Y1001A1001A65H!CTY_CTY|10Y1001A1001A65H_CTY_CTY|10YSE-1--------K": [
+        "DK",
+        "SE"
+    ],
+    "CTY|10Y1001A1001A39I!CTY_CTY|10Y1001A1001A39I_CTY_CTY|10YFI-1--------U": [
+        "EE",
+        "FI"
+    ],
+    "CTY|10Y1001A1001A39I!CTY_CTY|10Y1001A1001A39I_CTY_CTY|10YLV-1001A00074": [
+        "EE",
+        "LV"
+    ],
+    "CTY|10Y1001A1001A39I!CTY_CTY|10Y1001A1001A39I_CTY_CTY|RU": [
+        "EE",
+        "RU"
+    ],
+    "CTY|10YFI-1--------U!CTY_CTY|10YFI-1--------U_CTY_CTY|10Y1001A1001A39I": [
+        "FI",
+        "EE"
+    ],
+    "CTY|10YFI-1--------U!CTY_CTY|10YFI-1--------U_CTY_CTY|10YNO-0--------C": [
+        "FI",
+        "NO"
+    ],
+    "CTY|10YFI-1--------U!CTY_CTY|10YFI-1--------U_CTY_CTY|RU": [
+        "FI",
+        "RU"
+    ],
+    "CTY|10YFI-1--------U!CTY_CTY|10YFI-1--------U_CTY_CTY|10YSE-1--------K": [
+        "FI",
+        "SE"
+    ],
+    "CTY|10YFR-RTE------C!CTY_CTY|10YFR-RTE------C_CTY_CTY|10YBE----------2": [
+        "FR",
+        "BE"
+    ],
+    "CTY|10YFR-RTE------C!CTY_CTY|10YFR-RTE------C_CTY_CTY|10Y1001A1001A83F": [
+        "FR",
+        "DE"
+    ],
+    "CTY|10YFR-RTE------C!CTY_CTY|10YFR-RTE------C_CTY_CTY|10YIT-GRTN-----B": [
+        "FR",
+        "IT"
+    ],
+    "CTY|10YFR-RTE------C!CTY_CTY|10YFR-RTE------C_CTY_CTY|10YES-REE------0": [
+        "FR",
+        "ES"
+    ],
+    "CTY|10YFR-RTE------C!CTY_CTY|10YFR-RTE------C_CTY_CTY|10YCH-SWISSGRIDZ": [
+        "FR",
+        "CH"
+    ],
+    "CTY|10YFR-RTE------C!CTY_CTY|10YFR-RTE------C_CTY_CTY|10Y1001A1001A92E": [
+        "FR",
+        "GB"
+    ],
+    "CTY|10Y1001A1001B012!CTY_CTY|10Y1001A1001B012_CTY_CTY|10Y1001A1001B004": [
+        "GE",
+        "AM"
+    ],
+    "CTY|10Y1001A1001B012!CTY_CTY|10Y1001A1001B012_CTY_CTY|10Y1001A1001B05V": [
+        "GE",
+        "AZ"
+    ],
+    "CTY|10Y1001A1001B012!CTY_CTY|10Y1001A1001B012_CTY_CTY|RU": [
+        "GE",
+        "RU"
+    ],
+    "CTY|10Y1001A1001B012!CTY_CTY|10Y1001A1001B012_CTY_CTY|10YTR-TEIAS----W": [
+        "GE",
+        "TR"
+    ],
+    "CTY|10Y1001A1001A83F!CTY_CTY|10Y1001A1001A83F_CTY_CTY|10YAT-APG------L": [
+        "DE",
+        "AT"
+    ],
+    "CTY|10Y1001A1001A83F!CTY_CTY|10Y1001A1001A83F_CTY_CTY|10YBE----------2": [
+        "DE",
+        "BE"
+    ],
+    "CTY|10Y1001A1001A83F!CTY_CTY|10Y1001A1001A83F_CTY_CTY|10YCZ-CEPS-----N": [
+        "DE",
+        "CZ"
+    ],
+    "CTY|10Y1001A1001A83F!CTY_CTY|10Y1001A1001A83F_CTY_CTY|10Y1001A1001A65H": [
+        "DE",
+        "DK"
+    ],
+    "CTY|10Y1001A1001A83F!CTY_CTY|10Y1001A1001A83F_CTY_CTY|10YFR-RTE------C": [
+        "DE",
+        "FR"
+    ],
+    "CTY|10Y1001A1001A83F!CTY_CTY|10Y1001A1001A83F_CTY_CTY|10YLU-CEGEDEL-NQ": [
+        "DE",
+        "LU"
+    ],
+    "CTY|10Y1001A1001A83F!CTY_CTY|10Y1001A1001A83F_CTY_CTY|10YNL----------L": [
+        "DE",
+        "NL"
+    ],
+    "CTY|10Y1001A1001A83F!CTY_CTY|10Y1001A1001A83F_CTY_CTY|10YNO-0--------C": [
+        "DE",
+        "NO"
+    ],
+    "CTY|10Y1001A1001A83F!CTY_CTY|10Y1001A1001A83F_CTY_CTY|10YPL-AREA-----S": [
+        "DE",
+        "PL"
+    ],
+    "CTY|10Y1001A1001A83F!CTY_CTY|10Y1001A1001A83F_CTY_CTY|10YSE-1--------K": [
+        "DE",
+        "SE"
+    ],
+    "CTY|10Y1001A1001A83F!CTY_CTY|10Y1001A1001A83F_CTY_CTY|10YCH-SWISSGRIDZ": [
+        "DE",
+        "CH"
+    ],
+    "CTY|10YGR-HTSO-----Y!CTY_CTY|10YGR-HTSO-----Y_CTY_CTY|10YAL-KESH-----5": [
+        "GR",
+        "AL"
+    ],
+    "CTY|10YGR-HTSO-----Y!CTY_CTY|10YGR-HTSO-----Y_CTY_CTY|10YCA-BULGARIA-R": [
+        "GR",
+        "BG"
+    ],
+    "CTY|10YGR-HTSO-----Y!CTY_CTY|10YGR-HTSO-----Y_CTY_CTY|10YIT-GRTN-----B": [
+        "GR",
+        "IT"
+    ],
+    "CTY|10YGR-HTSO-----Y!CTY_CTY|10YGR-HTSO-----Y_CTY_CTY|10YMK-MEPSO----8": [
+        "GR",
+        "MK"
+    ],
+    "CTY|10YGR-HTSO-----Y!CTY_CTY|10YGR-HTSO-----Y_CTY_CTY|10YTR-TEIAS----W": [
+        "GR",
+        "TR"
+    ],
+    "CTY|10YHU-MAVIR----U!CTY_CTY|10YHU-MAVIR----U_CTY_CTY|10YAT-APG------L": [
+        "HU",
+        "AT"
+    ],
+    "CTY|10YHU-MAVIR----U!CTY_CTY|10YHU-MAVIR----U_CTY_CTY|10YHR-HEP------M": [
+        "HU",
+        "HR"
+    ],
+    "CTY|10YHU-MAVIR----U!CTY_CTY|10YHU-MAVIR----U_CTY_CTY|10YRO-TEL------P": [
+        "HU",
+        "RO"
+    ],
+    "CTY|10YHU-MAVIR----U!CTY_CTY|10YHU-MAVIR----U_CTY_CTY|10YCS-SERBIATSOV": [
+        "HU",
+        "RS"
+    ],
+    "CTY|10YHU-MAVIR----U!CTY_CTY|10YHU-MAVIR----U_CTY_CTY|10YSK-SEPS-----K": [
+        "HU",
+        "SK"
+    ],
+    "CTY|10YHU-MAVIR----U!CTY_CTY|10YHU-MAVIR----U_CTY_CTY|10Y1001C--00003F": [
+        "HU",
+        "UA"
+    ],
+    "CTY|10YIE-1001A00010!CTY_CTY|10YIE-1001A00010_CTY_CTY|10Y1001A1001A92E": [
+        "IE",
+        "GB"
+    ],
+    "CTY|10YIT-GRTN-----B!CTY_CTY|10YIT-GRTN-----B_CTY_CTY|10YAT-APG------L": [
+        "IT",
+        "AT"
+    ],
+    "CTY|10YIT-GRTN-----B!CTY_CTY|10YIT-GRTN-----B_CTY_CTY|10YFR-RTE------C": [
+        "IT",
+        "FR"
+    ],
+    "CTY|10YIT-GRTN-----B!CTY_CTY|10YIT-GRTN-----B_CTY_CTY|10YGR-HTSO-----Y": [
+        "IT",
+        "GR"
+    ],
+    "CTY|10YIT-GRTN-----B!CTY_CTY|10YIT-GRTN-----B_CTY_CTY|10Y1001A1001A93C": [
+        "IT",
+        "MT"
+    ],
+    "CTY|10YIT-GRTN-----B!CTY_CTY|10YIT-GRTN-----B_CTY_CTY|10YCS-CG-TSO---S": [
+        "IT",
+        "ME"
+    ],
+    "CTY|10YIT-GRTN-----B!CTY_CTY|10YIT-GRTN-----B_CTY_CTY|10YSI-ELES-----O": [
+        "IT",
+        "SI"
+    ],
+    "CTY|10YIT-GRTN-----B!CTY_CTY|10YIT-GRTN-----B_CTY_CTY|10YCH-SWISSGRIDZ": [
+        "IT",
+        "CH"
+    ],
+    "CTY|10Y1001C--00100H!CTY_CTY|10Y1001C--00100H_CTY_CTY|10YAL-KESH-----5": [
+        "XK",
+        "AL"
+    ],
+    "CTY|10Y1001C--00100H!CTY_CTY|10Y1001C--00100H_CTY_CTY|10YMK-MEPSO----8": [
+        "XK",
+        "MK"
+    ],
+    "CTY|10Y1001C--00100H!CTY_CTY|10Y1001C--00100H_CTY_CTY|10YCS-CG-TSO---S": [
+        "XK",
+        "ME"
+    ],
+    "CTY|10Y1001C--00100H!CTY_CTY|10Y1001C--00100H_CTY_CTY|10YCS-SERBIATSOV": [
+        "XK",
+        "RS"
+    ],
+    "CTY|10YLV-1001A00074!CTY_CTY|10YLV-1001A00074_CTY_CTY|10Y1001A1001A39I": [
+        "LV",
+        "EE"
+    ],
+    "CTY|10YLV-1001A00074!CTY_CTY|10YLV-1001A00074_CTY_CTY|10YLT-1001A0008Q": [
+        "LV",
+        "LT"
+    ],
+    "CTY|10YLV-1001A00074!CTY_CTY|10YLV-1001A00074_CTY_CTY|RU": [
+        "LV",
+        "RU"
+    ],
+    "CTY|10YLT-1001A0008Q!CTY_CTY|10YLT-1001A0008Q_CTY_CTY|BY": [
+        "LT",
+        "BY"
+    ],
+    "CTY|10YLT-1001A0008Q!CTY_CTY|10YLT-1001A0008Q_CTY_CTY|10YLV-1001A00074": [
+        "LT",
+        "LV"
+    ],
+    "CTY|10YLT-1001A0008Q!CTY_CTY|10YLT-1001A0008Q_CTY_CTY|10YPL-AREA-----S": [
+        "LT",
+        "PL"
+    ],
+    "CTY|10YLT-1001A0008Q!CTY_CTY|10YLT-1001A0008Q_CTY_CTY|RU": [
+        "LT",
+        "RU"
+    ],
+    "CTY|10YLT-1001A0008Q!CTY_CTY|10YLT-1001A0008Q_CTY_CTY|10YSE-1--------K": [
+        "LT",
+        "SE"
+    ],
+    "CTY|10YLU-CEGEDEL-NQ!CTY_CTY|10YLU-CEGEDEL-NQ_CTY_CTY|10YBE----------2": [
+        "LU",
+        "BE"
+    ],
+    "CTY|10YLU-CEGEDEL-NQ!CTY_CTY|10YLU-CEGEDEL-NQ_CTY_CTY|10Y1001A1001A83F": [
+        "LU",
+        "DE"
+    ],
+    "CTY|10Y1001A1001A93C!CTY_CTY|10Y1001A1001A93C_CTY_CTY|10YIT-GRTN-----B": [
+        "MT",
+        "IT"
+    ],
+    "CTY|10Y1001A1001A990!CTY_CTY|10Y1001A1001A990_CTY_CTY|10YRO-TEL------P": [
+        "MD",
+        "RO"
+    ],
+    "CTY|10Y1001A1001A990!CTY_CTY|10Y1001A1001A990_CTY_CTY|10Y1001C--00003F": [
+        "MD",
+        "UA"
+    ],
+    "CTY|10YCS-CG-TSO---S!CTY_CTY|10YCS-CG-TSO---S_CTY_CTY|10YAL-KESH-----5": [
+        "ME",
+        "AL"
+    ],
+    "CTY|10YCS-CG-TSO---S!CTY_CTY|10YCS-CG-TSO---S_CTY_CTY|10YBA-JPCC-----D": [
+        "ME",
+        "BA"
+    ],
+    "CTY|10YCS-CG-TSO---S!CTY_CTY|10YCS-CG-TSO---S_CTY_CTY|10YIT-GRTN-----B": [
+        "ME",
+        "IT"
+    ],
+    "CTY|10YCS-CG-TSO---S!CTY_CTY|10YCS-CG-TSO---S_CTY_CTY|10Y1001C--00100H": [
+        "ME",
+        "XK"
+    ],
+    "CTY|10YCS-CG-TSO---S!CTY_CTY|10YCS-CG-TSO---S_CTY_CTY|10YCS-SERBIATSOV": [
+        "ME",
+        "RS"
+    ],
+    "CTY|10YNL----------L!CTY_CTY|10YNL----------L_CTY_CTY|10YBE----------2": [
+        "NL",
+        "BE"
+    ],
+    "CTY|10YNL----------L!CTY_CTY|10YNL----------L_CTY_CTY|10Y1001A1001A65H": [
+        "NL",
+        "DK"
+    ],
+    "CTY|10YNL----------L!CTY_CTY|10YNL----------L_CTY_CTY|10Y1001A1001A83F": [
+        "NL",
+        "DE"
+    ],
+    "CTY|10YNL----------L!CTY_CTY|10YNL----------L_CTY_CTY|10YNO-0--------C": [
+        "NL",
+        "NO"
+    ],
+    "CTY|10YNL----------L!CTY_CTY|10YNL----------L_CTY_CTY|10Y1001A1001A92E": [
+        "NL",
+        "GB"
+    ],
+    "CTY|10YMK-MEPSO----8!CTY_CTY|10YMK-MEPSO----8_CTY_CTY|10YCA-BULGARIA-R": [
+        "MK",
+        "BG"
+    ],
+    "CTY|10YMK-MEPSO----8!CTY_CTY|10YMK-MEPSO----8_CTY_CTY|10YGR-HTSO-----Y": [
+        "MK",
+        "GR"
+    ],
+    "CTY|10YMK-MEPSO----8!CTY_CTY|10YMK-MEPSO----8_CTY_CTY|10Y1001C--00100H": [
+        "MK",
+        "XK"
+    ],
+    "CTY|10YMK-MEPSO----8!CTY_CTY|10YMK-MEPSO----8_CTY_CTY|10YCS-SERBIATSOV": [
+        "MK",
+        "RS"
+    ],
+    "CTY|10YNO-0--------C!CTY_CTY|10YNO-0--------C_CTY_CTY|10Y1001A1001A65H": [
+        "NO",
+        "DK"
+    ],
+    "CTY|10YNO-0--------C!CTY_CTY|10YNO-0--------C_CTY_CTY|10YFI-1--------U": [
+        "NO",
+        "FI"
+    ],
+    "CTY|10YNO-0--------C!CTY_CTY|10YNO-0--------C_CTY_CTY|10Y1001A1001A83F": [
+        "NO",
+        "DE"
+    ],
+    "CTY|10YNO-0--------C!CTY_CTY|10YNO-0--------C_CTY_CTY|10YNL----------L": [
+        "NO",
+        "NL"
+    ],
+    "CTY|10YNO-0--------C!CTY_CTY|10YNO-0--------C_CTY_CTY|10YSE-1--------K": [
+        "NO",
+        "SE"
+    ],
+    "CTY|10YNO-0--------C!CTY_CTY|10YNO-0--------C_CTY_CTY|10Y1001A1001A92E": [
+        "NO",
+        "GB"
+    ],
+    "CTY|10YPL-AREA-----S!CTY_CTY|10YPL-AREA-----S_CTY_CTY|10YCZ-CEPS-----N": [
+        "PL",
+        "CZ"
+    ],
+    "CTY|10YPL-AREA-----S!CTY_CTY|10YPL-AREA-----S_CTY_CTY|10Y1001A1001A83F": [
+        "PL",
+        "DE"
+    ],
+    "CTY|10YPL-AREA-----S!CTY_CTY|10YPL-AREA-----S_CTY_CTY|10YLT-1001A0008Q": [
+        "PL",
+        "LT"
+    ],
+    "CTY|10YPL-AREA-----S!CTY_CTY|10YPL-AREA-----S_CTY_CTY|10YSK-SEPS-----K": [
+        "PL",
+        "SK"
+    ],
+    "CTY|10YPL-AREA-----S!CTY_CTY|10YPL-AREA-----S_CTY_CTY|10YSE-1--------K": [
+        "PL",
+        "SE"
+    ],
+    "CTY|10YPL-AREA-----S!CTY_CTY|10YPL-AREA-----S_CTY_CTY|10Y1001C--00003F": [
+        "PL",
+        "UA"
+    ],
+    "CTY|10YPT-REN------W!CTY_CTY|10YPT-REN------W_CTY_CTY|10YES-REE------0": [
+        "PT",
+        "ES"
+    ],
+    "CTY|10YRO-TEL------P!CTY_CTY|10YRO-TEL------P_CTY_CTY|10YCA-BULGARIA-R": [
+        "RO",
+        "BG"
+    ],
+    "CTY|10YRO-TEL------P!CTY_CTY|10YRO-TEL------P_CTY_CTY|10YHU-MAVIR----U": [
+        "RO",
+        "HU"
+    ],
+    "CTY|10YRO-TEL------P!CTY_CTY|10YRO-TEL------P_CTY_CTY|10Y1001A1001A990": [
+        "RO",
+        "MD"
+    ],
+    "CTY|10YRO-TEL------P!CTY_CTY|10YRO-TEL------P_CTY_CTY|10YCS-SERBIATSOV": [
+        "RO",
+        "RS"
+    ],
+    "CTY|10YRO-TEL------P!CTY_CTY|10YRO-TEL------P_CTY_CTY|10Y1001C--00003F": [
+        "RO",
+        "UA"
+    ],
+    "CTY|RU!CTY_CTY|RU_CTY_CTY|10Y1001A1001A39I": [
+        "RU",
+        "EE"
+    ],
+    "CTY|RU!CTY_CTY|RU_CTY_CTY|10YFI-1--------U": [
+        "RU",
+        "FI"
+    ],
+    "CTY|RU!CTY_CTY|RU_CTY_CTY|10Y1001A1001B012": [
+        "RU",
+        "GE"
+    ],
+    "CTY|RU!CTY_CTY|RU_CTY_CTY|10YLV-1001A00074": [
+        "RU",
+        "LV"
+    ],
+    "CTY|RU!CTY_CTY|RU_CTY_CTY|10YLT-1001A0008Q": [
+        "RU",
+        "LT"
+    ],
+    "CTY|RU!CTY_CTY|RU_CTY_CTY|10Y1001C--00003F": [
+        "RU",
+        "UA"
+    ],
+    "CTY|10YCS-SERBIATSOV!CTY_CTY|10YCS-SERBIATSOV_CTY_CTY|10YAL-KESH-----5": [
+        "RS",
+        "AL"
+    ],
+    "CTY|10YCS-SERBIATSOV!CTY_CTY|10YCS-SERBIATSOV_CTY_CTY|10YBA-JPCC-----D": [
+        "RS",
+        "BA"
+    ],
+    "CTY|10YCS-SERBIATSOV!CTY_CTY|10YCS-SERBIATSOV_CTY_CTY|10YCA-BULGARIA-R": [
+        "RS",
+        "BG"
+    ],
+    "CTY|10YCS-SERBIATSOV!CTY_CTY|10YCS-SERBIATSOV_CTY_CTY|10YHR-HEP------M": [
+        "RS",
+        "HR"
+    ],
+    "CTY|10YCS-SERBIATSOV!CTY_CTY|10YCS-SERBIATSOV_CTY_CTY|10YHU-MAVIR----U": [
+        "RS",
+        "HU"
+    ],
+    "CTY|10YCS-SERBIATSOV!CTY_CTY|10YCS-SERBIATSOV_CTY_CTY|10Y1001C--00100H": [
+        "RS",
+        "XK"
+    ],
+    "CTY|10YCS-SERBIATSOV!CTY_CTY|10YCS-SERBIATSOV_CTY_CTY|10YMK-MEPSO----8": [
+        "RS",
+        "MK"
+    ],
+    "CTY|10YCS-SERBIATSOV!CTY_CTY|10YCS-SERBIATSOV_CTY_CTY|10YCS-CG-TSO---S": [
+        "RS",
+        "ME"
+    ],
+    "CTY|10YCS-SERBIATSOV!CTY_CTY|10YCS-SERBIATSOV_CTY_CTY|10YRO-TEL------P": [
+        "RS",
+        "RO"
+    ],
+    "CTY|10YSK-SEPS-----K!CTY_CTY|10YSK-SEPS-----K_CTY_CTY|10YCZ-CEPS-----N": [
+        "SK",
+        "CZ"
+    ],
+    "CTY|10YSK-SEPS-----K!CTY_CTY|10YSK-SEPS-----K_CTY_CTY|10YHU-MAVIR----U": [
+        "SK",
+        "HU"
+    ],
+    "CTY|10YSK-SEPS-----K!CTY_CTY|10YSK-SEPS-----K_CTY_CTY|10YPL-AREA-----S": [
+        "SK",
+        "PL"
+    ],
+    "CTY|10YSK-SEPS-----K!CTY_CTY|10YSK-SEPS-----K_CTY_CTY|10Y1001C--00003F": [
+        "SK",
+        "UA"
+    ],
+    "CTY|10YSI-ELES-----O!CTY_CTY|10YSI-ELES-----O_CTY_CTY|10YAT-APG------L": [
+        "SI",
+        "AT"
+    ],
+    "CTY|10YSI-ELES-----O!CTY_CTY|10YSI-ELES-----O_CTY_CTY|10YHR-HEP------M": [
+        "SI",
+        "HR"
+    ],
+    "CTY|10YSI-ELES-----O!CTY_CTY|10YSI-ELES-----O_CTY_CTY|10YIT-GRTN-----B": [
+        "SI",
+        "IT"
+    ],
+    "CTY|10YES-REE------0!CTY_CTY|10YES-REE------0_CTY_CTY|10YFR-RTE------C": [
+        "ES",
+        "FR"
+    ],
+    "CTY|10YES-REE------0!CTY_CTY|10YES-REE------0_CTY_CTY|10YPT-REN------W": [
+        "ES",
+        "PT"
+    ],
+    "CTY|10YSE-1--------K!CTY_CTY|10YSE-1--------K_CTY_CTY|10Y1001A1001A65H": [
+        "SE",
+        "DK"
+    ],
+    "CTY|10YSE-1--------K!CTY_CTY|10YSE-1--------K_CTY_CTY|10YFI-1--------U": [
+        "SE",
+        "FI"
+    ],
+    "CTY|10YSE-1--------K!CTY_CTY|10YSE-1--------K_CTY_CTY|10Y1001A1001A83F": [
+        "SE",
+        "DE"
+    ],
+    "CTY|10YSE-1--------K!CTY_CTY|10YSE-1--------K_CTY_CTY|10YLT-1001A0008Q": [
+        "SE",
+        "LT"
+    ],
+    "CTY|10YSE-1--------K!CTY_CTY|10YSE-1--------K_CTY_CTY|10YNO-0--------C": [
+        "SE",
+        "NO"
+    ],
+    "CTY|10YSE-1--------K!CTY_CTY|10YSE-1--------K_CTY_CTY|10YPL-AREA-----S": [
+        "SE",
+        "PL"
+    ],
+    "CTY|10YCH-SWISSGRIDZ!CTY_CTY|10YCH-SWISSGRIDZ_CTY_CTY|10YAT-APG------L": [
+        "CH",
+        "AT"
+    ],
+    "CTY|10YCH-SWISSGRIDZ!CTY_CTY|10YCH-SWISSGRIDZ_CTY_CTY|10YFR-RTE------C": [
+        "CH",
+        "FR"
+    ],
+    "CTY|10YCH-SWISSGRIDZ!CTY_CTY|10YCH-SWISSGRIDZ_CTY_CTY|10Y1001A1001A83F": [
+        "CH",
+        "DE"
+    ],
+    "CTY|10YCH-SWISSGRIDZ!CTY_CTY|10YCH-SWISSGRIDZ_CTY_CTY|10YIT-GRTN-----B": [
+        "CH",
+        "IT"
+    ],
+    "CTY|10YTR-TEIAS----W!CTY_CTY|10YTR-TEIAS----W_CTY_CTY|10YCA-BULGARIA-R": [
+        "TR",
+        "BG"
+    ],
+    "CTY|10YTR-TEIAS----W!CTY_CTY|10YTR-TEIAS----W_CTY_CTY|10Y1001A1001B012": [
+        "TR",
+        "GE"
+    ],
+    "CTY|10YTR-TEIAS----W!CTY_CTY|10YTR-TEIAS----W_CTY_CTY|10YGR-HTSO-----Y": [
+        "TR",
+        "GR"
+    ],
+    "CTY|10Y1001C--00003F!CTY_CTY|10Y1001C--00003F_CTY_CTY|BY": [
+        "UA",
+        "BY"
+    ],
+    "CTY|10Y1001C--00003F!CTY_CTY|10Y1001C--00003F_CTY_CTY|10YHU-MAVIR----U": [
+        "UA",
+        "HU"
+    ],
+    "CTY|10Y1001C--00003F!CTY_CTY|10Y1001C--00003F_CTY_CTY|10Y1001A1001A990": [
+        "UA",
+        "MD"
+    ],
+    "CTY|10Y1001C--00003F!CTY_CTY|10Y1001C--00003F_CTY_CTY|10YPL-AREA-----S": [
+        "UA",
+        "PL"
+    ],
+    "CTY|10Y1001C--00003F!CTY_CTY|10Y1001C--00003F_CTY_CTY|10YRO-TEL------P": [
+        "UA",
+        "RO"
+    ],
+    "CTY|10Y1001C--00003F!CTY_CTY|10Y1001C--00003F_CTY_CTY|RU": [
+        "UA",
+        "RU"
+    ],
+    "CTY|10Y1001C--00003F!CTY_CTY|10Y1001C--00003F_CTY_CTY|10YSK-SEPS-----K": [
+        "UA",
+        "SK"
+    ],
+    "CTY|10Y1001A1001A92E!CTY_CTY|10Y1001A1001A92E_CTY_CTY|10YBE----------2": [
+        "GB",
+        "BE"
+    ],
+    "CTY|10Y1001A1001A92E!CTY_CTY|10Y1001A1001A92E_CTY_CTY|10YFR-RTE------C": [
+        "GB",
+        "FR"
+    ],
+    "CTY|10Y1001A1001A92E!CTY_CTY|10Y1001A1001A92E_CTY_CTY|10YIE-1001A00010": [
+        "GB",
+        "IE"
+    ],
+    "CTY|10Y1001A1001A92E!CTY_CTY|10Y1001A1001A92E_CTY_CTY|10YNL----------L": [
+        "GB",
+        "NL"
+    ],
+    "CTY|10Y1001A1001A92E!CTY_CTY|10Y1001A1001A92E_CTY_CTY|10YNO-0--------C": [
+        "GB",
+        "NO"
+    ]
+}

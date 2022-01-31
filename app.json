@@ -1,0 +1,12 @@
+{
+  "name": "Cryptoversum on Heroku: Go",
+  "description": "Cryptoversum App",
+  "keywords": [
+    "cryptoversum",
+    "go",
+    "sample",
+    "angular"
+  ],
+  "website": "http://github.com/PatrickVienne/cryptoversum.git",
+  "repository": "http://github.com/PatrickVienne/cryptoversum.git"
+}
