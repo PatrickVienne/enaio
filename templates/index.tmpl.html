@@ -233,7 +233,7 @@
       return color;
     }
     // add sun layer on top
-    const VELOCITY = 9; // minutes per frame
+    const VELOCITY = 12; // minutes per frame
 
     const sunPosAt = dt => {
       const day = new Date(+dt).setUTCHours(0, 0, 0, 0);
@@ -316,7 +316,7 @@
         //   .polygonAltitude(d => d === hoverD ? 0.12 : 0.06)
         //   .polygonCapColor(d => d === hoverD ? 'steelblue' : colorScale(getVal(d)))
         // )
-        // .polygonsTransitionDuration(300)
+        .polygonsTransitionDuration(5000)
 
 
 
@@ -330,7 +330,7 @@
         .arcDashGap(0.08)
         .arcDashInitialGap(() => Math.random())
         .arcDashAnimateTime(700)
-        .arcsTransitionDuration(0);
+        .arcsTransitionDuration(3000);
 
       globe
         .pathsData(cablesGeo)
