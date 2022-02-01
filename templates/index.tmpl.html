@@ -20,12 +20,19 @@
 </head>
 
 <body>
-  <div style="width: 100%; background-color: black; color: burlywood; text-align: center; ">
+  <div style="width: 100%; background-color: black; color: burlywood; text-align: center; position: fixed;
+  background: transparent;">
     <span><span id="time"></span><span>CET</span></span>
     <button id="playbtn" onclick="playpause()">Pause</button>
     <input type="range" id="curTime" name="curTime" min="0" max="50" onchange="sliderChange()" disabled
       style="width: 50%;">
     <button id="reset" onclick="resetCamera()">ResetCamera</button>
+  </div>
+  <div style="width: 20%; background-color: black; color: burlywood; text-align: justify; position: fixed;
+  background: transparent; margin-top: 50px;">
+    <h4><span style="color: rgba(0, 255, 0, 0.9);">Im</span>/<span style="color: rgba(255, 0, 0, 0.9);">Export</span></h4>
+    <ul id="NetList" style="font-size: small;">
+    </ul>
   </div>
   <div id="globeViz"></div>
 
@@ -55,7 +62,7 @@
       }
     }
 
-    resetCamera = () => {}
+    resetCamera = () => { }
 
     function parseSubmarineCable(cablesGeo) {
       let cablePaths = [];
@@ -274,9 +281,22 @@
     const playbtn = document.getElementById('playbtn');
     const curTimeSld = document.getElementById('curTime');
     const resetBtn = document.getElementById('reset');
+    const netList = document.getElementById('NetList');
 
     function sliderChange() {
       dt = +curTimeSld.value;
+    }
+
+    function updateNetList(valueByCountry) {
+      netList.innerHTML = ""
+      for (const [cca3, value] of valueByCountry.entries()) {
+        let newLi = document.createElement("li")
+        let txt = (" " + Math.round(value))
+        txt = txt.padStart(10," ")
+        newLi.innerText = cca3 +" " + txt + " MW"
+        newLi.style = "color: " + (value > 0 ? 'rgba(0, 255, 0, 0.85)' : 'rgba(255, 0, 0, 0.85)')
+        netList.appendChild(newLi)
+      }
     }
 
     Promise.all([
@@ -318,8 +338,10 @@
             .pointRadius('radius')
             .pointColor('color')
           lastNet = unixSeconds;
+          updateNetList(entriesMap);
         }
       }
+
 
       // console.log("Flows, Net, CountryInfo", Flows, Net, CountryInfo);
       // console.log("countriesInfo", countriesInfo);
@@ -342,7 +364,7 @@
         .tileHeight(180)
         .tileUseGlobeProjection(false)
         .tileMaterial(() => new THREE.MeshLambertMaterial({ color: '#ffff00', opacity: 0.1, transparent: true }))
-        .tilesTransitionDuration(1000)
+        .tilesTransitionDuration(0)
 
         .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
         .polygonsData(countries.features.filter(d => d.properties.code !== 'AQ'))
@@ -371,7 +393,7 @@
         .arcDashGap(0.08)
         .arcDashInitialGap(() => Math.random())
         .arcDashAnimateTime(700)
-        .arcsTransitionDuration(1000);
+        .arcsTransitionDuration(0);
 
       globe
         .pathsData(cablesGeo)
