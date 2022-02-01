@@ -409,9 +409,9 @@
         .arcStroke('stroke')
         .arcDashLength(0.4)
         .arcAltitude(0.05)
-        .arcDashGap(0.08)
-        .arcDashInitialGap(() => Math.random())
-        .arcDashAnimateTime(700)
+        .arcDashGap(0.01)
+        .arcDashInitialGap(() => 0.01)
+        .arcDashAnimateTime(4000)
         .arcsTransitionDuration(0);
 
       globe
