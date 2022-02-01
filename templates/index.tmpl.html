@@ -20,10 +20,12 @@
 </head>
 
 <body>
-  <div style="width: 100%; background-color: black; color: burlywood; text-align: center;">
-    <span id="time"></span>
+  <div style="width: 100%; background-color: black; color: burlywood; text-align: center; ">
+    <span><span id="time"></span><span>CET</span></span>
     <button id="playbtn" onclick="playpause()">Pause</button>
-    <input type="range" id="curTime" name="curTime" min="0" max="50" onchange="sliderChange()" disabled style="width: 50%;">
+    <input type="range" id="curTime" name="curTime" min="0" max="50" onchange="sliderChange()" disabled
+      style="width: 50%;">
+    <button id="reset" onclick="resetCamera()">ResetCamera</button>
   </div>
   <div id="globeViz"></div>
 
@@ -52,6 +54,8 @@
         playbtn.innerText = "Play"
       }
     }
+
+    resetCamera = () => {}
 
     function parseSubmarineCable(cablesGeo) {
       let cablePaths = [];
@@ -221,8 +225,8 @@
           {
             lat: latlng[0],
             lng: latlng[1],
-            size: Math.sqrt(Math.abs(value)/4000000),
-            radius: Math.sqrt(Math.abs(value)/100000),
+            size: Math.sqrt(Math.abs(value) / 4000000),
+            radius: Math.sqrt(Math.abs(value) / 100000),
             color: value > 0 ? 'rgba(0, 255, 0, 0.85)' : 'rgba(255, 0, 0, 0.85)'
           })
       }
@@ -269,6 +273,7 @@
     const timeEl = document.getElementById('time');
     const playbtn = document.getElementById('playbtn');
     const curTimeSld = document.getElementById('curTime');
+    const resetBtn = document.getElementById('reset');
 
     function sliderChange() {
       dt = +curTimeSld.value;
@@ -421,15 +426,18 @@
       const camera = new THREE.PerspectiveCamera();
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
+
       camera.position.x = 20;
       camera.position.y = 150;
       camera.position.z = 100;
 
       // Add camera controls
       const tbControls = new THREE.TrackballControls(camera, renderer.domElement);
-      tbControls.minDistance = 101;
-      tbControls.rotateSpeed = 5;
-      tbControls.zoomSpeed = 0.8;
+      tbControls.minDistance = 150;
+      tbControls.rotateSpeed = 1;
+      tbControls.zoomSpeed = 0.4;
+
+      resetBtn.addEventListener("click", () => tbControls.reset());
 
       // Kick-off renderer
       (function animate() { // IIFE
