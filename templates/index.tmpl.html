@@ -14,12 +14,17 @@
   <style>
     * {
       overflow: hidden;
+      height: fit-content;
     }
   </style>
 </head>
 
 <body>
-  <div id="time" style="width: 100%; background-color: black; color: burlywood;"></div>
+  <div style="width: 100%; background-color: black; color: burlywood; text-align: center;">
+    <span id="time"></span>
+    <button id="playbtn" onclick="playpause()">Pause</button>
+    <input type="range" id="curTime" name="curTime" min="0" max="50" onchange="sliderChange()" disabled style="width: 50%;">
+  </div>
   <div id="globeViz"></div>
 
   <script>
@@ -30,6 +35,23 @@
     const countriesFile = "/static/countries.json";
     const csvTransferFile = "/static/country_transfer.csv";
     const submarineCableFile = "//raw.githubusercontent.com/telegeography/www.submarinecablemap.com/master/web/public/api/v3/cable/cable-geo.json";
+
+
+    let dtMultiplier = 1;
+    let paused = false;
+    function playpause() {
+      if (paused) {
+        dtMultiplier = 1
+        paused = false;
+        curTimeSld.disabled = true
+        playbtn.innerText = "Pause"
+      } else {
+        dtMultiplier = 0
+        paused = true;
+        curTimeSld.disabled = false
+        playbtn.innerText = "Play"
+      }
+    }
 
     function parseSubmarineCable(cablesGeo) {
       let cablePaths = [];
@@ -245,8 +267,12 @@
     let dt = (+(new Date()) - 24 * 3600 * 1000);
     const solarTile = { pos: sunPosAt(dt) };
     const timeEl = document.getElementById('time');
+    const playbtn = document.getElementById('playbtn');
+    const curTimeSld = document.getElementById('curTime');
 
-
+    function sliderChange() {
+      dt = +curTimeSld.value;
+    }
 
     Promise.all([
       fetch(submarineCableFile).then(r => r.json()).then(cablesGeo => parseSubmarineCable(cablesGeo)),
@@ -259,6 +285,9 @@
     ]).then(([cablesGeo, { countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo }]) => {
       const minTime = Math.min(...Object.keys(Net)) * 1000
       const maxTime = Math.max(...Object.keys(Net)) * 1000
+
+      curTimeSld.max = maxTime
+      curTimeSld.min = minTime
 
       let lastFlow = null;
       const FlowAt = (dt) => {
@@ -356,7 +385,7 @@
       requestAnimationFrame(() =>
         (function animate() {
           // dt += VELOCITY * 60 * 1000;
-          dt += VELOCITY * 60 * 10;
+          dt += VELOCITY * 60 * 10 * dtMultiplier;
           if (dt > maxTime) {
             dt = minTime
           } else if (dt < minTime) {
@@ -367,6 +396,7 @@
           NetAt(dt)
           globe.tilesData([solarTile]);
           timeEl.textContent = new Date(dt).toLocaleString();
+          curTimeSld.value = dt
           requestAnimationFrame(animate);
         })()
       );
