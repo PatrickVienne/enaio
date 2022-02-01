@@ -369,23 +369,11 @@ type JsonResult struct {
 	CountryInfo map[string]CountryInfo
 }
 
-func main() {
-	port := os.Getenv("PORT")
-
+func Reload() (map[int64][]LineData, map[int64]map[string]float64, map[string]CountryInfo) {
 	countryInfo := parseCountryInfo()
-	fmt.Println("Parsed  Country Info", len(countryInfo))
 
-	// After too many requests, user will get blocked by ENTSOE
 	yesterdayDate := time.Now().AddDate(0, 0, -1)
-	// dayUnix := yesterdayDate.Unix() - (yesterdayDate.Unix() % (24 * 3600))
-	// // yesterday := yesterdayDate.Format("20.12.2000")
 	yesterday := fmt.Sprintf("%02d.%02d.%04d", yesterdayDate.Day(), yesterdayDate.Month(), yesterdayDate.Year())
-	// time := "00:00-01:00"
-	// fmt.Println(dateTimeToTimestamp(yesterdayDate, time))
-
-	// fmt.Println("dayUnix", dayUnix)
-	// fmt.Println(dateTimeToTimestamp(yesterdayDate, time))
-
 	var results map[int64][]LineData
 	var netByTimeAndCountry map[int64]map[string]float64
 
@@ -406,12 +394,18 @@ func main() {
 		_ = ioutil.WriteFile(netfilename, netfile, 0644)
 		fmt.Printf("File created: " + netfilename + "\n")
 	}
+	return results, netByTimeAndCountry, countryInfo
+}
+
+func main() {
+	port := os.Getenv("PORT")
 
 	if port == "" {
 		// log.Fatal("$PORT must be set")
 		log.Println("Setting Port to 8088")
 		port = "8088"
 	}
+	results, netByTimeAndCountry, countryInfo := Reload()
 
 	router := gin.New()
 	router.Use(gin.Logger())
@@ -433,16 +427,10 @@ func main() {
 	router.GET("/api/flows", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"data": netByTimeAndCountry, "status": http.StatusOK})
 	})
-
-	//router.Use(static.Serve("/", static.LocalFile("./dist/cryptoversum-frontend/", true)))
-	//api := router.Group("/api")
-	//{
-	//	api.GET("/", func(c *gin.Context) {
-	//		c.JSON(http.StatusOK, gin.H {
-	//			"message": "pong",
-	//		})
-	//	})
-	//}
+	router.GET("/api/reload", func(c *gin.Context) {
+		go Reload()
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
+	})
 
 	router.Run(":" + port)
 }

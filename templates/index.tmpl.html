@@ -11,6 +11,11 @@
   <script src="//unpkg.com/three/examples/js/controls/TrackballControls.js"></script>
   <script src="//unpkg.com/three-globe"></script>
   <script src="//unpkg.com/solar-calculator"></script>
+  <style>
+    * {
+      overflow: hidden;
+    }
+  </style>
 </head>
 
 <body>
@@ -124,27 +129,6 @@
 
     }
 
-    function getCountryNet(countriesTransfer) {
-      return countriesTransfer.map((value) => {
-        v = JSON.parse(value.from_country_latlng)
-        w = JSON.parse(value.to_country_latlng)
-        let startlat = v[0]
-        let startlng = v[1]
-        let endLat = w[0]
-        let endLng = w[1]
-        result = {
-          startLat: startlat,
-          startLng: startlng,
-          endLat: endLat,
-          endLng: endLng,
-          color: [`rgba(0, 255, 0, 0.9)`, `rgba(255, 0, 0, 0.9)`],
-          stroke: value.value / 1000
-        }
-        // console.log("getCountryNet", value.from_country_cca3, value.to_country_cca3, value, val, color);
-        return result
-      })
-    }
-
     function loadFlowsToArcData(flows) {
       // console.log("Start Proc", flows)
       let arcs = flows.map((value) => {
@@ -204,8 +188,23 @@
         // console.log("valueByCountry NOT FOUND", v.properties.ISO_A3, v, 0);
         return 0
       }
-      let val = sigmoid(value / 1000.) / 50 + 0.001
-      return val;
+      return sigmoid(value / 1000.) / 50 + 0.001;
+    }
+
+    function loadPointsPerCountry(valueByCountry, latlngByCCA3) {
+      let results = []
+      for (const [cca3, value] of valueByCountry.entries()) {
+        latlng = latlngByCCA3.get(cca3)
+        results.push(
+          {
+            lat: latlng[0],
+            lng: latlng[1],
+            size: Math.sqrt(Math.abs(value)/4000000),
+            radius: Math.sqrt(Math.abs(value)/100000),
+            color: value > 0 ? 'rgba(0, 255, 0, 0.85)' : 'rgba(255, 0, 0, 0.85)'
+          })
+      }
+      return results
     }
 
     function loadCountryColor(valueByCountry, v) {
@@ -225,7 +224,7 @@
         value = valueByCountry.get(countrycode)
       } else {
         // console.log("valueByCountry NOT FOUND", v.properties.ISO_A3, v, 0);
-        return 'rgba(0, 0, 0, 1)'
+        return 'rgba(0, 0, 0, 0.3)'
       }
       let val = sigmoid(value / 1000.)
       let color = 'rgba(' + Math.round(255 * (1 - val)) + ',' + Math.round(255 * val) + ', 0, 0.7)';
@@ -252,10 +251,12 @@
     Promise.all([
       fetch(submarineCableFile).then(r => r.json()).then(cablesGeo => parseSubmarineCable(cablesGeo)),
       fetch(countriesFile).then(r => r.json()).then(countries => parseCountriesFile(countries)),
-      fetch(csvTransferFile).then(r => r.text()).then(countriesTransfer => Papa.parse(countriesTransfer).data),
+      // fetch(csvTransferFile).then(r => r.text()).then(countriesTransfer => Papa.parse(countriesTransfer).data),
       fetch(populationFile).then(r => r.json()).then(population => population),
       fetch("/api/total").then(r => r.json()).then(r => r.data)
-    ]).then(([cablesGeo, countriesInfo, countriesTransfer, countries, { Flows, Net, CountryInfo }]) => {
+      // ]).then(([cablesGeo, countriesInfo, countriesTransfer, countries, { Flows, Net, CountryInfo }]) => {
+      // ]).then(([cablesGeo, countriesInfo, countries, { Flows, Net, CountryInfo }]) => {#
+    ]).then(([cablesGeo, { countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo }]) => {
       const minTime = Math.min(...Object.keys(Net)) * 1000
       const maxTime = Math.max(...Object.keys(Net)) * 1000
 
@@ -274,7 +275,14 @@
         let unixSeconds = "" + Math.round(dt / 1000 / 3600) * 3600
         if (lastNet != unixSeconds && unixSeconds in Net) {
           // console.log("NET", new Date(unixSeconds * 1000), Net[unixSeconds]);
-          globe.polygonCapColor((v) => loadCountryColor(new Map(Object.entries(Net[unixSeconds])), v))
+          let entriesMap = new Map(Object.entries(Net[unixSeconds]));
+          globe.polygonCapColor((v) => loadCountryColor(entriesMap, v))
+
+          // add bins displying countries energy usage
+          globe.pointsData(loadPointsPerCountry(entriesMap, latlngByCCA3))
+            .pointAltitude('size')
+            .pointRadius('radius')
+            .pointColor('color')
           lastNet = unixSeconds;
         }
       }
@@ -290,7 +298,6 @@
       // console.log("valueByCountry countriesTransfer", valueByCountry);
       // let arcsData = countryTransferToArcData(parsed);
       // console.log("Parsed arcData", arcsData);
-
 
       const globe = new ThreeGlobe()
         .tilesData([solarTile])
