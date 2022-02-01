@@ -56,8 +56,8 @@
 
     function ParseTransferCSV(valuesLines) {
       let header = valuesLines[0]
-      console.log(header)
-      console.log(valuesLines.length)
+      // console.log(header)
+      // console.log(valuesLines.length)
 
       const countriesByCCA2 = new Map();
       const countriesByCCA3 = new Map();
@@ -146,7 +146,7 @@
     }
 
     function loadFlowsToArcData(flows) {
-      console.log("Start Proc", flows)
+      // console.log("Start Proc", flows)
       let arcs = flows.map((value) => {
         // { "border": "CTY|10YHR-HEP------M!CTY_CTY|10YHR-HEP------M_CTY_CTY|10YBA-JPCC-----D",
         //  "date": "30.01.2022", "starttimestr": "00:00", "endtimestr": "01:00", 
@@ -173,10 +173,10 @@
           }
         }
 
-        console.log("loadFlowsToArcData", value["startCCA3"], value["endCCA3"], value);
+        // console.log("loadFlowsToArcData", value["startCCA3"], value["endCCA3"], value);
         return result
       })
-      console.log("ARCS", arcs);
+      // console.log("ARCS", arcs);
       return arcs
     }
 
@@ -188,15 +188,15 @@
     function loadCountryValue(valueByCountry, v) {
       let countrycode = v.properties.ISO_A3;
       if (countrycode === "-99") {
-        console.log("Countrycode RE", countrycode, v)
+        // console.log("Countrycode RE", countrycode, v)
         countrycode = v.properties.WB_A3;
       }
       if (countrycode === "-99") {
-        console.log("Countrycode RERE", countrycode, v)
+        // console.log("Countrycode RERE", countrycode, v)
         countrycode = v.properties.SU_A3;
       }
       if (countrycode === "-99") {
-        console.log("Could not identify countrycode", v)
+        // console.log("Could not identify countrycode", v)
       }
       if (valueByCountry.has(countrycode)) {
         value = valueByCountry.get(countrycode)
@@ -211,15 +211,15 @@
     function loadCountryColor(valueByCountry, v) {
       let countrycode = v.properties.ISO_A3;
       if (countrycode === "-99") {
-        console.log("Countrycode RE", countrycode, v)
+        // console.log("Countrycode RE", countrycode, v)
         countrycode = v.properties.WB_A3;
       }
       if (countrycode === "-99") {
-        console.log("Countrycode RERE", countrycode, v)
+        // console.log("Countrycode RERE", countrycode, v)
         countrycode = v.properties.SU_A3;
       }
       if (countrycode === "-99") {
-        console.log("Could not identify countrycode", v)
+        // console.log("Could not identify countrycode", v)
       }
       if (valueByCountry.has(countrycode)) {
         value = valueByCountry.get(countrycode)
@@ -233,7 +233,7 @@
       return color;
     }
     // add sun layer on top
-    const VELOCITY = 12; // minutes per frame
+    const VELOCITY = 6; // minutes per frame
 
     const sunPosAt = dt => {
       const day = new Date(+dt).setUTCHours(0, 0, 0, 0);
@@ -279,17 +279,17 @@
         }
       }
 
-      console.log("Flows, Net, CountryInfo", Flows, Net, CountryInfo);
-      console.log("countriesInfo", countriesInfo);
-      console.log("countries", countries);
-      console.log("countriesTransfer", countriesTransfer);
-      let results = ParseTransferCSV(countriesTransfer);
-      let parsed = results[0];
-      let valueByCountry = results[1];
-      console.log("Parsed countriesTransfer", parsed);
-      console.log("valueByCountry countriesTransfer", valueByCountry);
-      let arcsData = countryTransferToArcData(parsed);
-      console.log("Parsed arcData", arcsData);
+      // console.log("Flows, Net, CountryInfo", Flows, Net, CountryInfo);
+      // console.log("countriesInfo", countriesInfo);
+      // console.log("countries", countries);
+      // console.log("countriesTransfer", countriesTransfer);
+      // let results = ParseTransferCSV(countriesTransfer);
+      // let parsed = results[0];
+      // let valueByCountry = results[1];
+      // console.log("Parsed countriesTransfer", parsed);
+      // console.log("valueByCountry countriesTransfer", valueByCountry);
+      // let arcsData = countryTransferToArcData(parsed);
+      // console.log("Parsed arcData", arcsData);
 
 
       const globe = new ThreeGlobe()
@@ -300,8 +300,8 @@
         .tileWidth(180)
         .tileHeight(180)
         .tileUseGlobeProjection(false)
-        .tileMaterial(() => new THREE.MeshLambertMaterial({ color: '#ffff00', opacity: 0.3, transparent: true }))
-        .tilesTransitionDuration(0)
+        .tileMaterial(() => new THREE.MeshLambertMaterial({ color: '#ffff00', opacity: 0.1, transparent: true }))
+        .tilesTransitionDuration(1000)
 
         .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
         .polygonsData(countries.features.filter(d => d.properties.code !== 'AQ'))
@@ -316,13 +316,13 @@
         //   .polygonAltitude(d => d === hoverD ? 0.12 : 0.06)
         //   .polygonCapColor(d => d === hoverD ? 'steelblue' : colorScale(getVal(d)))
         // )
-        .polygonsTransitionDuration(5000)
+        .polygonsTransitionDuration(1000)
 
 
 
 
         // add lines transporting energy between countries
-        .arcsData(arcsData)
+        .arcsData([])
         .arcColor('color')
         .arcStroke('stroke')
         .arcDashLength(0.4)
@@ -330,7 +330,7 @@
         .arcDashGap(0.08)
         .arcDashInitialGap(() => Math.random())
         .arcDashAnimateTime(700)
-        .arcsTransitionDuration(3000);
+        .arcsTransitionDuration(1000);
 
       globe
         .pathsData(cablesGeo)
@@ -349,7 +349,7 @@
       requestAnimationFrame(() =>
         (function animate() {
           // dt += VELOCITY * 60 * 1000;
-          dt += VELOCITY * 60 * 100;
+          dt += VELOCITY * 60 * 10;
           if (dt > maxTime) {
             dt = minTime
           } else if (dt < minTime) {
