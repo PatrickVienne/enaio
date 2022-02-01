@@ -16,21 +16,37 @@
       overflow: hidden;
       height: fit-content;
     }
+
+    .hide {
+      visibility: hidden;
+    }
+
+    .li:hover+.hide {
+      visibility: visible;
+      color: red;
+    }
   </style>
+
+
 </head>
 
 <body>
-  <div style="width: 100%; background-color: black; color: burlywood; text-align: center; position: fixed;
+  <div style="width: 100%; background-color: black; color: burlywood; text-align: center; position: fixed; top: 10px; margin-bottom: 10px;
+  background: transparent;">
+  <span>Trans-Border Energy Flows</span>
+  </div>
+  <div style="width: 100%; background-color: black; color: burlywood; text-align: center; position: fixed; bottom: 30px; margin-bottom: 10px;
   background: transparent;">
     <span><span id="time"></span><span>CET</span></span>
     <button id="playbtn" onclick="playpause()">Pause</button>
-    <input type="range" id="curTime" name="curTime" min="0" max="50" onchange="sliderChange()" disabled
+    <input type="range" id="curTime" name="curTime" min="0" max="9999999999999999" onchange="sliderChange()" disabled
       style="width: 50%;">
     <button id="reset" onclick="resetCamera()">ResetCamera</button>
   </div>
   <div style="width: 20%; background-color: black; color: burlywood; text-align: justify; position: fixed;
   background: transparent; margin-top: 50px;">
-    <h4><span style="color: rgba(0, 255, 0, 0.9);">Im</span>/<span style="color: rgba(255, 0, 0, 0.9);">Export</span></h4>
+    <h4><span style="color: rgba(0, 255, 0, 0.9);">Im</span>/<span style="color: rgba(255, 0, 0, 0.9);">Export</span>
+    </h4>
     <ul id="NetList" style="font-size: small;">
     </ul>
   </div>
@@ -290,12 +306,12 @@
     function updateNetList(valueByCountry) {
       netList.innerHTML = ""
       for (const [cca3, value] of valueByCountry.entries()) {
-        let newLi = document.createElement("li")
-        let txt = (" " + Math.round(value))
-        txt = txt.padStart(10," ")
-        newLi.innerText = cca3 +" " + txt + " MW"
-        newLi.style = "color: " + (value > 0 ? 'rgba(0, 255, 0, 0.85)' : 'rgba(255, 0, 0, 0.85)')
-        netList.appendChild(newLi)
+        let newLi = document.createElement("li");
+        let txt = (" " + Math.round(value));
+        txt = txt.padStart(10, " ");
+        newLi.innerText = cca3 + " " + txt + " MW";
+        newLi.style = "color: " + (value > 0 ? 'rgba(0, 255, 0, 0.85)' : 'rgba(255, 0, 0, 0.85)');
+        netList.appendChild(newLi);
       }
     }
 
