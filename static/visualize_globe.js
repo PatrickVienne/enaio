@@ -63,7 +63,7 @@ function parseCountriesFile(values) {
             cca3 = "KSV"
             countriesByCCA3.set(cca3, country);
             latlngByCCA3.set(cca3, latlng);
-            nameByCCA3.set(cca3, name);    
+            nameByCCA3.set(cca3, name);
         }
 
     });
@@ -157,17 +157,19 @@ function loadCountryValue(v) {
 
 function loadPointsPerCountry(valueByCountry, latlngByCCA3) {
     let results = []
-    console.log("loadPointsPerCountry", valueByCountry);
+
     for (const [cca3, value] of valueByCountry.entries()) {
-        console.log("cca3, value", cca3, value)
-        results.push(
-            {
-                lat: latlngByCCA3.get(cca3)[0],
-                lng: latlngByCCA3.get(cca3)[1],
-                size: Math.sqrt(Math.abs(value) / 4000000),
-                radius: Math.sqrt(Math.abs(value) / 100000),
-                color: value > 0 ? 'rgba(0, 255, 0, 0.85)' : 'rgba(255, 0, 0, 0.85)'
-            })
+        if (latlngByCCA3.has(cca3)) {
+            results.push(
+                {
+                    lat: latlngByCCA3.get(cca3)[0],
+                    lng: latlngByCCA3.get(cca3)[1],
+                    size: Math.sqrt(Math.abs(value) / 4000000),
+                    radius: Math.sqrt(Math.abs(value) / 100000),
+                    color: value > 0 ? 'rgba(0, 255, 0, 0.85)' : 'rgba(255, 0, 0, 0.85)'
+                })
+        }
+
     }
     return results
 }
@@ -210,8 +212,8 @@ function loadCountryColorWithOpacity(valueByCountry, v, opacity) {
 
 
 
-function onDataLoaded([cablesGeo, { countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo }]) {
-    console.log("cablesGeo", cablesGeo)
+function onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo }]) {
+
     const minTime = Math.min(...Object.keys(Net)) * 1000
     const maxTime = Math.max(...Object.keys(Net)) * 1000
 
@@ -324,15 +326,15 @@ function onDataLoaded([cablesGeo, { countriesByCCA2, countriesByCCA3, latlngByCC
         .polygonsTransitionDuration(1000)
 
         // load submarine cables with labels
-        .pathsData(cablesGeo)
-        .pathPoints('coords')
-        .pathPointLat(p => p[1])
-        .pathPointLng(p => p[0])
-        .pathColor(path => path.properties.color)
-        .pathLabel(path => path.properties.name)
-        .pathDashLength(0.1)
-        .pathDashGap(0.008)
-        .pathDashAnimateTime(12000)
+        // .pathsData(cablesGeo)
+        // .pathPoints('coords')
+        // .pathPointLat(p => p[1])
+        // .pathPointLng(p => p[0])
+        // .pathColor(path => path.properties.color)
+        // .pathLabel(path => path.properties.name)
+        // .pathDashLength(0.1)
+        // .pathDashGap(0.008)
+        // .pathDashAnimateTime(12000)
 
         // add lines transporting energy between countries
         .arcsData([])
@@ -376,10 +378,9 @@ function onDataLoaded([cablesGeo, { countriesByCCA2, countriesByCCA3, latlngByCC
 }
 
 Promise.all([
-    fetch(submarineCableFile).then(r => r.json()).then(cablesGeo => parseSubmarineCable(cablesGeo)),
     fetch(countriesFile).then(r => r.json()).then(countries => parseCountriesFile(countries)),
     fetch(populationFile).then(r => r.json()).then(population => population),
     fetch("/api/total").then(r => r.json()).then(r => r.data)
-]).then(([cablesGeo, { countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo }]) =>
-    onDataLoaded([cablesGeo, { countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo }])
+]).then(([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo }]) =>
+    onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo }])
 );
