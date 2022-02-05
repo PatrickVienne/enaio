@@ -48,7 +48,7 @@
   background: transparent;">
     <span><span id="time"></span><span>CET</span></span>
     <button id="playbtn" onclick="playpause()">Pause</button>
-    <input type="range" id="curTime" name="curTime" min="0" max="9999999999999999" onchange="sliderChange()" disabled
+    <input type="range" id="curTime" name="curTime" min="0" max="9999999999999999" oninput="sliderChange(this.value)" onchange="sliderChange(this.value)" step="any" disabled
       style="width: 50%;">
     <button id="reset">ResetCamera</button>
     <div>

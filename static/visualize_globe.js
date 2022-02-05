@@ -98,7 +98,8 @@ const curTimeSld = document.getElementById('curTime');
 const resetBtn = document.getElementById('reset');
 const netList = document.getElementById('NetList');
 
-function sliderChange() {
+function sliderChange(event) {
+    console.log("sliderChange", event)
     dt = +curTimeSld.value;
 }
 
