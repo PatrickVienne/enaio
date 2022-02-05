@@ -58,7 +58,16 @@ function parseCountriesFile(values) {
         countriesByCCA3.set(cca3, country);
         latlngByCCA3.set(cca3, latlng);
         nameByCCA3.set(cca3, name);
+
+        if (cca3 === "UNK") {
+            cca3 = "KSV"
+            countriesByCCA3.set(cca3, country);
+            latlngByCCA3.set(cca3, latlng);
+            nameByCCA3.set(cca3, name);    
+        }
+
     });
+    console.log("latlngByCCA3", latlngByCCA3)
     return { countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 };
 }
 
@@ -148,7 +157,9 @@ function loadCountryValue(v) {
 
 function loadPointsPerCountry(valueByCountry, latlngByCCA3) {
     let results = []
+    console.log("loadPointsPerCountry", valueByCountry);
     for (const [cca3, value] of valueByCountry.entries()) {
+        console.log("cca3, value", cca3, value)
         results.push(
             {
                 lat: latlngByCCA3.get(cca3)[0],
@@ -215,10 +226,10 @@ function onDataLoaded([cablesGeo, { countriesByCCA2, countriesByCCA3, latlngByCC
 
 
     const d3colorScale = d3.scaleSqrt()
-    .domain([-1, 0, 1])
-    .range(["red", "yellow", "green"]);
+        .domain([-1, 0, 1])
+        .range(["red", "yellow", "green"]);
 
-    const colorScale = (v) => d3colorScale(sigmoid(v)-0.5);
+    const colorScale = (v) => d3colorScale(sigmoid(v) - 0.5);
 
     function countryToColor(entriesMap, v) {
         let val = getCountryVal(entriesMap, v);
@@ -230,6 +241,7 @@ function onDataLoaded([cablesGeo, { countriesByCCA2, countriesByCCA3, latlngByCC
     }
 
     function updateNetList(valueByCountry) {
+        console.log("updateNetList", valueByCountry);
         netList.innerHTML = ""
         for (let [cca3, value] of valueByCountry.entries()) {
             let color = colorScale(value / 1000)
