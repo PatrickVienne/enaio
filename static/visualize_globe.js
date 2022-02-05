@@ -227,11 +227,14 @@ function onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByC
     // colorScale.domain([-1e2, 1e2]);
 
 
-    const d3colorScale = d3.scaleSqrt()
-        .domain([-1, 0, 1])
-        .range(["red", "yellow", "green"]);
+    // USE THESE 4 LINES for alternative color scheme
+    // const d3colorScale = d3.scaleSqrt()
+    // .domain([-1, 0, 1])
+    // .range(["red", "yellow", "green"]);
+    // const colorScale = (v) => d3colorScale(sigmoid(v)-0.5);
 
-    const colorScale = (v) => d3colorScale(sigmoid(v) - 0.5);
+    // red-green color scheme
+    const colorScale = (v) =>  'rgba(' + Math.round(255 * (1 - sigmoid(v))) + ',' + Math.round(255 * sigmoid(v)) + ', 0, 0.7)';
 
     function countryToColor(entriesMap, v) {
         let val = getCountryVal(entriesMap, v);
