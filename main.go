@@ -243,7 +243,13 @@ func getAllCountryTransmissions(yesterdayDate time.Time, countryInfo map[string]
 				}
 			}
 			lineDataEntry.StartCCA3 = countryInfo[startCca2].Cca3
+			if startCca2 == "XK" {
+				lineDataEntry.StartCCA3 = "KSV"
+			}
 			lineDataEntry.EndCCA3 = countryInfo[endCca2].Cca3
+			if endCca2 == "XK" {
+				lineDataEntry.EndCCA3 = "KSV"
+			}
 
 			row.ForEach("td", func(idx int, td *colly.HTMLElement) {
 				txt := strings.Replace(td.Text, "\t", "", -1)
