@@ -7,7 +7,6 @@ const populationFile = "/static/countries.geojson";
 const earthFile = "//unpkg.com/three-globe@2.21.4/example/img/earth-dark.jpg"
 const skyFile = '//unpkg.com/three-globe/example/img/night-sky.png'
 const countriesFile = "/static/countries.json";
-const csvTransferFile = "/static/country_transfer.csv";
 const submarineCableFile = "//raw.githubusercontent.com/telegeography/www.submarinecablemap.com/master/web/public/api/v3/cable/cable-geo.json";
 
 const polygonAltitudeStd = 0.01;
@@ -157,7 +156,7 @@ function loadCountryValue(v) {
 }
 
 function getPointSizeByValue(value) {
-    return Math.sqrt(Math.abs(value) / 6000000)
+    return Math.sqrt(Math.abs(value) / 8000000)
 }
 
 function loadPointsPerCountry(valueByCountry, latlngByCCA3) {
@@ -229,10 +228,10 @@ function loadPricestoLabelData(priceByCountry, countriesByCCA2) {
         let country = countriesByCCA2.get(cca2);
         res.push(
             {
-                lat: country["latlng"][0]-0.5,
-                long: country["latlng"][1],
-                text: `${country["cca3"]} ${value} EUR`,
-                alt:  0.05,
+                lat: country["latlng"][0]-0.4,
+                long: country["latlng"][1]-0.2,
+                text: `${country["cca3"]} ${value}`,
+                alt:  0.06,
             }
         )
     }
@@ -300,7 +299,7 @@ function onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByC
     }
 
     const NetAt = (dt) => {
-        let unixSeconds = "" + Math.round(dt / 1000 / 900) * 900
+        let unixSeconds = "" + Math.round(dt / 1000 / 3600) * 3600
         if (lastNet != unixSeconds && unixSeconds in Net) {
             let netByCountryCCA3 = new Map(Object.entries(Net[unixSeconds]));
             const maxVal = Math.max(...netByCountryCCA3.values());
@@ -331,9 +330,7 @@ function onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByC
             if (lastPrice != unixSeconds && unixSeconds in Prices) {
                 let pricesMap = new Map(Object.entries(Prices[unixSeconds]));
                 globe.labelsData(loadPricestoLabelData(pricesMap, countriesByCCA2))
-                    .polygonLabel((v) => `<div style="background-color: rgba(0, 0, 0, 0.5); border-radius: 5px; color: rgba(255, 255, 255, 1);"><b>${getCountryCodeByProperties(v)}:</b> <br />
-                                            <i> Net: ${getCountryVal(netByCountryCCA3, v)}</i> GW <br/>
-                                            <i> Cost: ${costByCountry(pricesMap, countriesByCCA3, v)}</i> EUR <br/></div>`);
+
                 lastPrice = unixSeconds;
             }
             lastNet = unixSeconds;
@@ -387,10 +384,10 @@ function onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByC
         .labelsData([])
         .labelLat('lat')
         .labelLng('long')
-        .labelText('text')
+        .labelLabel(('text'))
         .labelAltitude('alt')
         .labelColor(() => 'white')
-        .labelSize(d => 0.4);
+        .labelSize(d => 0.3);
 
     globe
         .pointOfView(MAP_CENTER, 4000);
