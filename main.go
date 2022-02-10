@@ -320,9 +320,14 @@ func getAllCountryTransmissions(yesterdayDate time.Time, countryInfo map[string]
 			if _, ok := netByTimeAndCountry[timestamp][entryLine.EndCCA3]; !ok {
 				netByTimeAndCountry[timestamp][entryLine.EndCCA3] = 0
 			}
-
-			netByTimeAndCountry[timestamp][entryLine.StartCCA3] = netByTimeAndCountry[timestamp][entryLine.StartCCA3] + entryLine.NetStream
-			netByTimeAndCountry[timestamp][entryLine.EndCCA3] = netByTimeAndCountry[timestamp][entryLine.EndCCA3] - entryLine.NetStream
+			// if entryLine.StartCCA3 == "DEU" {
+			// 	fmt.Println("BEFORE SEND", timestamp, entryLine.EndCCA3, netByTimeAndCountry[timestamp][entryLine.StartCCA3], "ADD", entryLine.NetStream)
+			// }
+			// if entryLine.EndCCA3 == "DEU" {
+			// 	fmt.Println("BEFORE REC", timestamp, entryLine.StartCCA3, netByTimeAndCountry[timestamp][entryLine.EndCCA3], "SUBTR", entryLine.NetStream)
+			// }
+			netByTimeAndCountry[timestamp][entryLine.StartCCA3] = (netByTimeAndCountry[timestamp][entryLine.StartCCA3] + entryLine.NetStream)
+			netByTimeAndCountry[timestamp][entryLine.EndCCA3] = (netByTimeAndCountry[timestamp][entryLine.EndCCA3] - entryLine.NetStream)
 		}
 	}
 
@@ -373,6 +378,7 @@ type JsonResult struct {
 	Flows       map[int64][]LineData
 	Net         map[int64]map[string]float64
 	CountryInfo map[string]CountryInfo
+	Prices      map[int]map[string]float64
 }
 
 func Reload() (map[int64][]LineData, map[int64]map[string]float64, map[string]CountryInfo) {
@@ -403,14 +409,178 @@ func Reload() (map[int64][]LineData, map[int64]map[string]float64, map[string]Co
 	return results, netByTimeAndCountry, countryInfo
 }
 
+// Request options
+// {
+// 	"referrerPolicy": "strict-origin-when-cross-origin",
+// 	"body": null,
+// 	"method": "GET",
+// 	"mode": "cors",
+// 	"credentials": "include"
+//   }
+
+func BuildPriceUrl(areaId string, startTime int, quarterHour bool) string {
+	if quarterHour {
+		return "https://www.smard.de/app/chart_data/" + areaId + "/DE/" + areaId + "_DE_hour_" + strconv.Itoa(startTime) + "000.json"
+	} else {
+		return "https://www.smard.de/app/chart_data/" + areaId + "/DE/" + areaId + "_DE_quarterhour_" + strconv.Itoa(startTime) + "000.json"
+	}
+}
+
+type PriceMetaData struct {
+	Version int64 `json:"version"`
+	Created int64 `json:"created"`
+}
+
+type PriceData struct {
+	MetaData PriceMetaData `json:"meta_data"`
+	Series   [][]float64   `json:"series"`
+	Country  string        `json:"country"`
+	CCA3     string        `json:"cca3"`
+	Lat      float32       `json:"lat"`
+	Long     float32       `json:"long"`
+}
+
+func parsePriceResponse(url string, country string, countryInfo map[string]CountryInfo, priceDataChannel chan PriceData, wg *sync.WaitGroup) {
+	resp, err := http.Get(url)
+	defer wg.Done()
+
+	if err != nil {
+		fmt.Println("No response from request")
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body) // response body is []byte
+	var result PriceData
+	if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to go struct pointer
+		fmt.Println("Can not unmarshal JSON")
+	}
+	result.Country = country
+	result.CCA3 = countryInfo[country].Cca3
+	result.Lat = countryInfo[country].LatLng[0]
+	result.Long = countryInfo[country].LatLng[1]
+
+	priceDataChannel <- result
+}
+
+func GetLastMondayTimestamp() int {
+	loc, _ := time.LoadLocation("Europe/Berlin")
+	date := time.Now()
+	for date.Weekday() != time.Monday { // iterate back to Monday
+		date = date.AddDate(0, 0, -1)
+	}
+	t := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, loc)
+	return int(t.Unix())
+
+}
+
+func LoadPrices() map[int]map[string]float64 {
+	countryInfo := parseCountryInfo()
+	// yesterdayDate := time.Now().AddDate(0, 0, -1)
+	// yesterday := fmt.Sprintf("%02d.%02d.%04d", yesterdayDate.Day(), yesterdayDate.Month(), yesterdayDate.Year())
+
+	start := time.Now()
+	defer fmt.Println("LoadPrices: ", time.Since(start), " sec")
+
+	// result := ReadJsonEntsoe()
+
+	// timestamp := strconv.FormatInt(time.Now().Unix(), 10)
+	// loc, _ := time.LoadLocation("Europe/Berlin")
+	// timestamp := int(int(time.Now().AddDate(0, 0, -2).Unix())/86400)*86400 - 3600
+
+	// timestamp := strconv.FormatInt(time.Now().Unix(), 10)
+
+	timestamp := GetLastMondayTimestamp()
+	fmt.Println(timestamp)
+
+	urlByCountry := map[string]string{
+		"DE": BuildPriceUrl("4169", timestamp, false), //de_lu
+		"DK": BuildPriceUrl("252", 1644188400, false),
+		// "DK2":     BuildPriceUrl("253", 1643583600, false),
+		"FR": BuildPriceUrl("254", 1644188400, false),
+		"IT": BuildPriceUrl("255", 1644188400, false),
+		"NL": BuildPriceUrl("256", 1644188400, false),
+		"PL": BuildPriceUrl("257", 1644188400, false),
+		"SE": BuildPriceUrl("258", 1644188400, false), //swe4
+		"CH": BuildPriceUrl("259", 1644188400, false),
+		"SI": BuildPriceUrl("260", 1644188400, false),
+		"CZ": BuildPriceUrl("261", 1644188400, false),
+		"HU": BuildPriceUrl("262", 1644188400, false),
+		"AT": BuildPriceUrl("4170", 1644188400, false),
+		"BE": BuildPriceUrl("4996", 1644188400, false),
+		"NO": BuildPriceUrl("4997", 1644188400, false),
+	}
+
+	priceDataChannel := make(chan PriceData)
+	var wg sync.WaitGroup
+	// wg.Add(len(urls))
+	wg.Add(len(urlByCountry))
+
+	go func() {
+		wg.Wait()
+		close(priceDataChannel)
+	}()
+
+	for country, url := range urlByCountry {
+		fmt.Println(country, url)
+		go parsePriceResponse(url, country, countryInfo, priceDataChannel, &wg)
+	}
+
+	schulesByTime := make(map[int]map[string]float64, 0)
+	for x := range priceDataChannel {
+		fmt.Println(x.Country)
+		for _, entry := range x.Series {
+			// set timestamps to seconds
+			ts := int(entry[0]) / 1000
+			if _, ok := schulesByTime[ts]; !ok {
+				val := make(map[string]float64, 0)
+				schulesByTime[ts] = val
+			}
+			schulesByTime[ts][x.Country] = entry[1]
+		}
+	}
+
+	return schulesByTime
+}
+
+func readPrices(pricefilename string) map[int]map[string]float64 {
+	var priceData map[int]map[string]float64
+
+	content, _ := ioutil.ReadFile(pricefilename)
+	json.Unmarshal(content, &priceData)
+
+	return priceData
+}
+
+func LoadPriceWithCache() map[int]map[string]float64 {
+	timestamp := GetLastMondayTimestamp()
+
+	var results map[int]map[string]float64
+
+	pricefilename := strconv.Itoa(timestamp) + "_price.json"
+	if _, err := os.Stat(pricefilename); err == nil {
+		fmt.Printf("File exists: " + pricefilename + "\n")
+		results = readPrices(pricefilename)
+	} else {
+		results = LoadPrices()
+		// file, _ := json.MarshalIndent(results, "", " ")
+		priceContent, err := json.Marshal(results)
+		if err != nil {
+			fmt.Printf(err.Error())
+		}
+		_ = ioutil.WriteFile(pricefilename, priceContent, 0644)
+		fmt.Printf("File created: " + pricefilename + "\n")
+	}
+	return results
+}
+
 func main() {
 	port := os.Getenv("PORT")
 
 	if port == "" {
 		// log.Fatal("$PORT must be set")
-		log.Println("Setting Port to 8088")
-		port = "8088"
+		port = "38089"
+		log.Println("Setting Port to ", port)
 	}
+	prices := LoadPriceWithCache()
 	results, netByTimeAndCountry, countryInfo := Reload()
 
 	router := gin.New()
@@ -422,7 +592,7 @@ func main() {
 		c.HTML(http.StatusOK, "index.tmpl.html", nil)
 	})
 	router.GET("/api/total", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"data": JsonResult{results, netByTimeAndCountry, countryInfo}, "status": http.StatusOK})
+		c.JSON(http.StatusOK, gin.H{"data": JsonResult{results, netByTimeAndCountry, countryInfo, prices}, "status": http.StatusOK})
 	})
 	router.GET("/api/countryInfo", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"data": countryInfo, "status": http.StatusOK})

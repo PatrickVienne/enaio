@@ -67,12 +67,13 @@ function parseCountriesFile(values) {
         }
 
     });
-    console.log("latlngByCCA3", latlngByCCA3)
+
     return { countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 };
 }
 
 
 let lastNet = null;
+let lastPrice = null;
 
 
 const COUNTRY = 'Portugal';
@@ -99,7 +100,6 @@ const resetBtn = document.getElementById('reset');
 const netList = document.getElementById('NetList');
 
 function sliderChange(event) {
-    console.log("sliderChange", event)
     dt = +curTimeSld.value;
 }
 
@@ -156,6 +156,10 @@ function loadCountryValue(v) {
     return sigmoid(value / 1000.) / 50 + 0.001;
 }
 
+function getPointSizeByValue(value) {
+    return Math.sqrt(Math.abs(value) / 6000000)
+}
+
 function loadPointsPerCountry(valueByCountry, latlngByCCA3) {
     let results = []
 
@@ -165,7 +169,7 @@ function loadPointsPerCountry(valueByCountry, latlngByCCA3) {
                 {
                     lat: latlngByCCA3.get(cca3)[0],
                     lng: latlngByCCA3.get(cca3)[1],
-                    size: Math.sqrt(Math.abs(value) / 4000000),
+                    size: getPointSizeByValue(value),
                     radius: Math.sqrt(Math.abs(value) / 100000),
                     color: value > 0 ? 'rgba(0, 255, 0, 0.85)' : 'rgba(255, 0, 0, 0.85)'
                 })
@@ -198,7 +202,6 @@ function getCountryVal(valueByCountry, v) {
     } else {
         return valueByCountry.get(countrycode) / 1000.
     }
-
 }
 
 function loadCountryColorWithOpacity(valueByCountry, v, opacity) {
@@ -211,9 +214,32 @@ function loadCountryColorWithOpacity(valueByCountry, v, opacity) {
     return color;
 }
 
+function costByCountry(priceByCountry, countriesByCCA3, v){
+    let countrycode = getCountryCodeByProperties(v);
+    if (countrycode === "-99" || (!countriesByCCA3.has(countrycode))) {
+        return null;
+    } else {
+        return priceByCountry.get(countriesByCCA3.get(countrycode)["cca2"])
+    }
 
+}
+function loadPricestoLabelData(priceByCountry, countriesByCCA2) {
+    var res = [];
+    for (let [cca2, value] of priceByCountry.entries()) {
+        let country = countriesByCCA2.get(cca2);
+        res.push(
+            {
+                lat: country["latlng"][0]-0.5,
+                long: country["latlng"][1],
+                text: `${country["cca3"]} ${value} EUR`,
+                alt:  0.05,
+            }
+        )
+    }
+    return res;
+}
 
-function onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo }]) {
+function onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo, Prices }]) {
 
     const minTime = Math.min(...Object.keys(Net)) * 1000
     const maxTime = Math.max(...Object.keys(Net)) * 1000
@@ -235,7 +261,7 @@ function onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByC
     // const colorScale = (v) => d3colorScale(sigmoid(v)-0.5);
 
     // red-green color scheme
-    const colorScale = (v) =>  'rgba(' + Math.round(255 * (1 - sigmoid(v))) + ',' + Math.round(255 * sigmoid(v)) + ', 0, 0.7)';
+    const colorScale = (v) => 'rgba(' + Math.round(255 * (1 - sigmoid(v))) + ',' + Math.round(255 * sigmoid(v)) + ', 0, 0.7)';
 
     function countryToColor(entriesMap, v) {
         let val = getCountryVal(entriesMap, v);
@@ -247,7 +273,6 @@ function onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByC
     }
 
     function updateNetList(valueByCountry) {
-        console.log("updateNetList", valueByCountry);
         netList.innerHTML = ""
         for (let [cca3, value] of valueByCountry.entries()) {
             let color = colorScale(value / 1000)
@@ -274,38 +299,45 @@ function onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByC
         }
     }
 
-
     const NetAt = (dt) => {
-        let unixSeconds = "" + Math.round(dt / 1000 / 3600) * 3600
+        let unixSeconds = "" + Math.round(dt / 1000 / 900) * 900
         if (lastNet != unixSeconds && unixSeconds in Net) {
-            let entriesMap = new Map(Object.entries(Net[unixSeconds]));
-            const maxVal = Math.max(...entriesMap.values());
-            const minVal = Math.min(...entriesMap.values());
-            console.log("Scale: ", maxVal, minVal, entriesMap)
+            let netByCountryCCA3 = new Map(Object.entries(Net[unixSeconds]));
+            const maxVal = Math.max(...netByCountryCCA3.values());
+            const minVal = Math.min(...netByCountryCCA3.values());
             globe
-                // .polygonCapColor((v) => loadCountryColorWithOpacity(entriesMap, v, OPACITY_STD))
-                .polygonCapColor((v) => countryToColor(entriesMap, v))
+                // .polygonCapColor((v) => loadCountryColorWithOpacity(netByCountryCCA3, v, OPACITY_STD))
+                .polygonCapColor((v) => countryToColor(netByCountryCCA3, v))
                 .polygonAltitude(0.01)
                 .polygonLabel((v) => `
                 <div style="background-color: rgba(0, 0, 0, 0.5); border-radius: 5px; color: rgba(255, 255, 255, 1);"><b>${getCountryCodeByProperties(v)}:</b> <br />
-                <i> Net: ${getCountryVal(entriesMap, v)}</i> GW <br/></div>`)
+                <i> Net: ${getCountryVal(netByCountryCCA3, v)}</i> GW <br/></div>`)
                 .onPolygonHover(hoverD => {
                     return globe
                         .polygonAltitude(d => d === hoverD ? polygonAltitudeHover : polygonAltitudeStd)
-                        // .polygonCapColor(d => d === hoverD ? loadCountryColorWithOpacity(entriesMap, d, OPACITY_SELECTED): loadCountryColorWithOpacity(entriesMap, d, OPACITY_STD))
-                        .polygonCapColor(d => d === hoverD ? countryToColor(entriesMap, d) : countryToColor(entriesMap, d))
+                        // .polygonCapColor(d => d === hoverD ? loadCountryColorWithOpacity(netByCountryCCA3, d, OPACITY_SELECTED): loadCountryColorWithOpacity(netByCountryCCA3, d, OPACITY_STD))
+                        .polygonCapColor(d => d === hoverD ? countryToColor(netByCountryCCA3, d) : countryToColor(netByCountryCCA3, d))
                 }
                 )
                 .lineHoverPrecision(0)
 
 
             // add bins displying countries energy usage
-            globe.pointsData(loadPointsPerCountry(entriesMap, latlngByCCA3))
+            globe.pointsData(loadPointsPerCountry(netByCountryCCA3, latlngByCCA3))
                 .pointAltitude('size')
                 .pointRadius('radius')
                 .pointColor('color')
+
+            if (lastPrice != unixSeconds && unixSeconds in Prices) {
+                let pricesMap = new Map(Object.entries(Prices[unixSeconds]));
+                globe.labelsData(loadPricestoLabelData(pricesMap, countriesByCCA2))
+                    .polygonLabel((v) => `<div style="background-color: rgba(0, 0, 0, 0.5); border-radius: 5px; color: rgba(255, 255, 255, 1);"><b>${getCountryCodeByProperties(v)}:</b> <br />
+                                            <i> Net: ${getCountryVal(netByCountryCCA3, v)}</i> GW <br/>
+                                            <i> Cost: ${costByCountry(pricesMap, countriesByCCA3, v)}</i> EUR <br/></div>`);
+                lastPrice = unixSeconds;
+            }
             lastNet = unixSeconds;
-            updateNetList(entriesMap);
+            updateNetList(netByCountryCCA3);
         }
     }
 
@@ -346,11 +378,19 @@ function onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByC
         .arcStroke('stroke')
         .arcLabel('label')
         .arcDashLength(0.4)
-        .arcAltitude(0.07)
+        .arcAltitude(0.04)
         .arcDashGap(0.01)
         .arcDashInitialGap(() => 0.01)
         .arcDashAnimateTime(4000)
-        .arcsTransitionDuration(0);
+        .arcsTransitionDuration(0)
+
+        .labelsData([])
+        .labelLat('lat')
+        .labelLng('long')
+        .labelText('text')
+        .labelAltitude('alt')
+        .labelColor(() => 'white')
+        .labelSize(d => 0.4);
 
     globe
         .pointOfView(MAP_CENTER, 4000);
@@ -385,6 +425,6 @@ Promise.all([
     fetch(countriesFile).then(r => r.json()).then(countries => parseCountriesFile(countries)),
     fetch(populationFile).then(r => r.json()).then(population => population),
     fetch("/api/total").then(r => r.json()).then(r => r.data)
-]).then(([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo }]) =>
-    onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo }])
+]).then(([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo, Prices }]) =>
+    onDataLoaded([{ countriesByCCA2, countriesByCCA3, latlngByCCA3, nameByCCA3 }, countries, { Flows, Net, CountryInfo, Prices }])
 );
