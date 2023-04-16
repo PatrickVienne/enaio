@@ -1,4 +1,5 @@
 .env
 .docker_build/
 .idea/
+api.key
 bin/

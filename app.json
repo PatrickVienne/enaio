@@ -1,12 +1,12 @@
 {
-  "name": "Cryptoversum on Heroku: Go",
-  "description": "Cryptoversum App",
+  "name": "Enaio on Heroku: Go",
+  "description": "Enaio App",
   "keywords": [
-    "cryptoversum",
+    "enaio",
     "go",
     "sample",
     "angular"
   ],
-  "website": "http://github.com/PatrickVienne/cryptoversum.git",
-  "repository": "http://github.com/PatrickVienne/cryptoversum.git"
+  "website": "http://github.com/PatrickVienne/enaio.git",
+  "repository": "http://github.com/PatrickVienne/enaio.git"
 }

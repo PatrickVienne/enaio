@@ -1,6 +1,6 @@
-module github.com/PatrickVienne/cryptoversum
+module github.com/PatrickVienne/enaio
 
-go 1.17
+go 1.20
 
 require (
 	github.com/gin-gonic/gin v0.0.0-20150626140855-4cc2de6207f4

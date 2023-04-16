@@ -12,3 +12,16 @@ https://www.smard.de/page/home/marktdaten/78?marketDataAttributes=%7B%22resoluti
 get spot price market data
 https://energy-charts.info/charts/price_spot_market/data/eu/week_2022_06.json
 
+
+
+## API Guide
+https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html
+
+## Restful Guide
+https://transparency.entsoe.eu/content/static_content/download?path=/Static%20content/web%20api/RestfulAPI_IG.pdf
+
+
+
+https://transparency.entsoe.eu/api?securityToken=754da8c8-4631-4e53-a079-96b4778ae03c&documentType=A65&processType=A16&outBiddingZone_Domain=10YCZ-CEPS-----N&periodStart=201512312300&periodEnd=201612312300
+
+/api?documentType=A11&in_Domain=10YCZ-CEPS-----N&out_Domain=10YSK-SEPS-----K&periodStart=201512312300&periodEnd=201612312300

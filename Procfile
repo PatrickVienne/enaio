@@ -1,1 +1,1 @@
-web: bin/cryptoversum
+web: bin/enaio
