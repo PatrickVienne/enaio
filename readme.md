@@ -1,4 +1,4 @@
-# Enaio
+# Enaio Open source project
 
 Website to visualize energy movements
 
