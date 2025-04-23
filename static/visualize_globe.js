@@ -91,7 +91,10 @@ const sunPosAt = dt => {
 
 
 var dt = (+(new Date()) - 24 * 3600 * 1000);
-const solarTile = { pos: sunPosAt(dt) };
+const solarTile = { 
+    pos: sunPosAt(dt),
+    material: new THREE.MeshLambertMaterial({ color: '#ffff00', opacity: 0.1, transparent: true })
+};
 const timeEl = document.getElementById('time');
 const playbtn = document.getElementById('playbtn');
 const curTimeSld = document.getElementById('curTime');
