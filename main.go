@@ -3,7 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
+
 	"log"
 	"net/http"
 	"os"
@@ -55,7 +56,7 @@ func getCountryTransmissions(requestDate string, country_pair string, timestamp 
 }
 
 func ReadJsonEntsoe() map[string][]string {
-	content, err := ioutil.ReadFile("./static/entsoe-transmissions.json")
+	content, err := os.ReadFile("./static/entsoe-transmissions.json")
 	if err != nil {
 		log.Fatal("Error when opening file: ", err)
 	}
@@ -86,7 +87,7 @@ func getUrlContent(urlToGet string, ch chan<- string) {
 	}
 
 	// Read the body of the HTTP response
-	if content, err = ioutil.ReadAll(resp.Body); err != nil {
+	if content, err = io.ReadAll(resp.Body); err != nil {
 		return
 	}
 
@@ -123,7 +124,7 @@ func readFlow(yesterdayDate time.Time) map[int64][]LineData {
 
 	var flows map[int64][]LineData
 
-	content, _ := ioutil.ReadFile(filename)
+	content, _ := os.ReadFile(filename)
 	json.Unmarshal(content, &flows)
 
 	return flows
@@ -136,7 +137,7 @@ func readNet(yesterdayDate time.Time) map[int64]map[string]float64 {
 
 	var netdata map[int64]map[string]float64
 
-	content, _ := ioutil.ReadFile(netfilename)
+	content, _ := os.ReadFile(netfilename)
 	json.Unmarshal(content, &netdata)
 
 	return netdata
@@ -320,12 +321,12 @@ func getAllCountryTransmissions(yesterdayDate time.Time, countryInfo map[string]
 			if _, ok := netByTimeAndCountry[timestamp][entryLine.EndCCA3]; !ok {
 				netByTimeAndCountry[timestamp][entryLine.EndCCA3] = 0
 			}
-			// if entryLine.StartCCA3 == "DEU" {
-			// 	fmt.Println("BEFORE SEND", timestamp, entryLine.EndCCA3, netByTimeAndCountry[timestamp][entryLine.StartCCA3], "ADD", entryLine.NetStream)
-			// }
-			// if entryLine.EndCCA3 == "DEU" {
-			// 	fmt.Println("BEFORE REC", timestamp, entryLine.StartCCA3, netByTimeAndCountry[timestamp][entryLine.EndCCA3], "SUBTR", entryLine.NetStream)
-			// }
+			if entryLine.StartCCA3 == "UKR" {
+				fmt.Println("BEFORE SEND", timestamp, entryLine.EndCCA3, netByTimeAndCountry[timestamp][entryLine.StartCCA3], "ADD", entryLine.NetStream)
+			}
+			if entryLine.EndCCA3 == "UKR" {
+				fmt.Println("BEFORE REC", timestamp, entryLine.StartCCA3, netByTimeAndCountry[timestamp][entryLine.EndCCA3], "SUBTR", entryLine.NetStream)
+			}
 			netByTimeAndCountry[timestamp][entryLine.StartCCA3] = (netByTimeAndCountry[timestamp][entryLine.StartCCA3] + entryLine.NetStream)
 			netByTimeAndCountry[timestamp][entryLine.EndCCA3] = (netByTimeAndCountry[timestamp][entryLine.EndCCA3] - entryLine.NetStream)
 		}
@@ -351,7 +352,7 @@ type CountryInfo struct {
 }
 
 func parseCountryInfo() map[string]CountryInfo {
-	file, _ := ioutil.ReadFile("./static/countries_info.json")
+	file, _ := os.ReadFile("./static/countries_info.json")
 
 	cca2ToInfo := make(map[string]CountryInfo, 0)
 
@@ -399,11 +400,11 @@ func Reload() (map[int64][]LineData, map[int64]map[string]float64, map[string]Co
 		results, netByTimeAndCountry = getAllCountryTransmissions(yesterdayDate, countryInfo)
 		// file, _ := json.MarshalIndent(results, "", " ")
 		flowfile, _ := json.Marshal(results)
-		_ = ioutil.WriteFile(flowfilename, flowfile, 0644)
+		_ = os.WriteFile(flowfilename, flowfile, 0644)
 		fmt.Printf("File created: " + flowfilename + "\n")
 
 		netfile, _ := json.Marshal(netByTimeAndCountry)
-		_ = ioutil.WriteFile(netfilename, netfile, 0644)
+		_ = os.WriteFile(netfilename, netfile, 0644)
 		fmt.Printf("File created: " + netfilename + "\n")
 	}
 	return results, netByTimeAndCountry, countryInfo
@@ -448,7 +449,7 @@ func parsePriceResponse(url string, country string, countryInfo map[string]Count
 		fmt.Println("No response from request")
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body) // response body is []byte
+	body, err := io.ReadAll(resp.Body) // response body is []byte
 	var result PriceData
 	if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to go struct pointer
 		fmt.Println("Can not unmarshal JSON")
@@ -544,7 +545,7 @@ func LoadPrices() map[int]map[string]float64 {
 func readPrices(pricefilename string) map[int]map[string]float64 {
 	var priceData map[int]map[string]float64
 
-	content, _ := ioutil.ReadFile(pricefilename)
+	content, _ := os.ReadFile(pricefilename)
 	json.Unmarshal(content, &priceData)
 
 	return priceData
@@ -566,7 +567,7 @@ func LoadPriceWithCache() map[int]map[string]float64 {
 		if err != nil {
 			fmt.Printf(err.Error())
 		}
-		_ = ioutil.WriteFile(pricefilename, priceContent, 0644)
+		_ = os.WriteFile(pricefilename, priceContent, 0644)
 		fmt.Printf("File created: " + pricefilename + "\n")
 	}
 	return results
